@@ -967,12 +967,15 @@ img {
 .recipe-modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.75);
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
   z-index: 2000;
+}
+
+.recipe-modal.hidden {
+  display: none;
 }
 
 .recipe-modal-content {
@@ -981,18 +984,20 @@ img {
   background: #121923;
   border: 1px solid #233041;
   border-radius: 20px;
-  padding: 24px;
+  padding: 28px;
   position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .recipe-close-btn {
   position: absolute;
-  top: 12px;
-  right: 16px;
+  top: 14px;
+  right: 18px;
   background: none;
   border: none;
   color: #f5f7fa;
-  font-size: 2rem;
+  font-size: 1.8rem;
   cursor: pointer;
 }
 

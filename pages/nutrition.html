@@ -3,27 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nutrition | CaribbeanFit</title>
+  <title>Nutrition | Tabanka Tamers</title>
   <link rel="stylesheet" href="../styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 
+<div id="recipeModal" class="recipe-modal hidden">
+  <div class="recipe-modal-content">
+    <button id="closeRecipeModal" class="recipe-close-btn">&times;</button>
+    <div id="recipeModalBody"></div>
+  </div>
+</div>
+
 <body>
 
 <header class="navbar">
-  <div class="logo">CaribbeanFit</div>
+  <div class="logo">Tabanka Tamers</div>
 
   <nav>
-    <a href="../index.html">Home</a>
-    <a href="nutrition.html">Nutrition</a>
-    <a href="workouts.html">Workouts</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="favorites.html">Favorites</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="workouts.html">Workouts</a>
+      <a href="nutrition.html">Nutrition</a>
+      <a href="favorites.html">Favorites</a>
+      <a href="progress.html">Progress</a>
+      <a href="profile.html">Profile</a>
   </nav>
 
   <div class="nav-actions">
     <span id="userStatus" class="user-status">Guest</span>
     <button id="loginBtn" class="btn-primary">Login</button>
+    <button id="logoutBtn" class="btn-secondary">Logout</button>
   </div>
 </header>
 
@@ -41,8 +50,12 @@
     <div class="nutrition-search-card">
 
       <div class="nutrition-search-row">
-        <input id="searchInput" class="search-input" placeholder="Search recipes..." />
-        <button id="searchBtn" class="btn-primary">Search</button>
+       <input id="recipeSearchInput" class="search-input" placeholder="Search recipes..." />
+        <button id="recipeSearchBtn" class="btn-primary">Search</button>
+
+        <div id="nutritionCardsContainer" class="nutrition-grid"></div>
+
+        <div id="paginationContainer" class="pagination-row"></div>
       </div>
 
       <div class="chip-row">
@@ -60,9 +73,9 @@
 
 </main>
 
-<footer class="footer">
-  CaribbeanFit © 2026
-</footer>
+  <footer class="footer">
+    <p>Tabanka Tamers © 2026</p>
+  </footer>
 
 <script src="../auth.js"></script>
 <script src="../nutrition.js"></script>

@@ -10,20 +10,48 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
+
+<script>
+  function updateNavbar() {
+    const nav = document.getElementById("navActions");
+    const user = localStorage.getItem("user");
+
+    if (user) {
+      nav.innerHTML = `
+        <span class="user-status">Logged in as ${user}</span>
+        <button id="logoutBtn" class="btn-secondary">Logout</button>
+      `;
+
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        localStorage.removeItem("user");
+        location.reload();
+      });
+
+    } else {
+      nav.innerHTML = `
+        <a href="pages/auth.html" class="btn-primary">Log In</a>
+      `;
+    }
+  }
+
+  updateNavbar();
+</script>
 <body>
   <header class="navbar">
     <div class="logo">Tabanka Tamers</div>
 
     <nav>
-      <a href="pages/nutrition.html">Nutrition</a>
+      <a href="index.html">Home</a>
       <a href="pages/workouts.html">Workouts</a>
+      <a href="pages/nutrition.html">Nutrition</a>
+      <a href="pages/dashboard.html">Dashboard</a>
+      <a href="pages/favorites.html">Favorites</a>
       <a href="pages/progress.html">Progress</a>
       <a href="pages/profile.html">Profile</a>
     </nav>
 
-    <div class="nav-actions">
-      <a href="pages/auth.html" class="btn-primary">Log In</a>
-    </div>
+<div class="nav-actions" id="navActions">
+</div>
   </header>
 
   <main class="landing-main">
@@ -37,8 +65,7 @@
       </p>
 
       <div class="landing-actions">
-        <a href="pages/auth.html" class="btn-primary">Get Started</a>
-        <a href="pages/auth.html" class="btn-secondary">Create Account</a>
+        <a href="pages/auth.html" class="btn-primary">Log In</a>
       </div>
     </section>
 
@@ -142,8 +169,7 @@
         designed to feel practical, modern, and motivating.
       </p>
       <div class="landing-actions">
-        <a href="pages/auth.html" class="btn-primary">Log In</a>
-        <a href="pages/auth.html" class="btn-secondary">Sign Up</a>
+        <a href="pages/auth.html" class="btn-primary">Sign Up</a>
       </div>
     </section>
   </main>

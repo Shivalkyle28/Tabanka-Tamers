@@ -1,95 +1,251 @@
-const container = document.getElementById("nutritionContainer");
-const searchInput = document.getElementById("searchInput");
+const nutritionCardsContainer = document.getElementById("nutritionCardsContainer");
+const paginationContainer = document.getElementById("paginationContainer");
 
-let foods = [];
-let filteredFoods = [];
+const recipeSearchInput = document.getElementById("recipeSearchInput");
+const recipeSearchBtn = document.getElementById("recipeSearchBtn");
+const chipButtons = document.querySelectorAll(".chip-btn");
+
+const recipeModal = document.getElementById("recipeModal");
+const recipeModalBody = document.getElementById("recipeModalBody");
+const closeRecipeModal = document.getElementById("closeRecipeModal");
+
+const userStatus = document.getElementById("userStatus");
+const loginBtn = document.getElementById("loginBtn");
+
+let allRecipes = [];
+let filteredRecipes = [];
+let currentPage = 1;
+const itemsPerPage = 6;
 let activeFilter = "all";
 
-async function loadFoods() {
-  const res = await fetch("../data/caribbean-foods.json");
-  foods = await res.json();
-
-  filteredFoods = [...foods];
-  renderFoods();
+function getCurrentUser() {
+  return JSON.parse(localStorage.getItem("currentUser"));
 }
 
-function renderFoods() {
-  container.innerHTML = "";
+function updateUserStatus() {
+  const currentUser = getCurrentUser();
 
-  if (filteredFoods.length === 0) {
-    container.innerHTML = `<p class="empty-state">No recipes found</p>`;
+  if (currentUser) {
+    userStatus.textContent = `Logged in as ${currentUser.username}`;
+    loginBtn.textContent = currentUser.username;
+    loginBtn.onclick = function () {
+      window.location.href = "profile.html";
+    };
+  } else {
+    userStatus.textContent = "Guest";
+    loginBtn.textContent = "Login";
+    loginBtn.onclick = function () {
+      window.location.href = "auth.html";
+    };
+  }
+}
+
+async function loadRecipes() {
+  try {
+    const response = await fetch("../data/caribbean-foods.json");
+    const data = await response.json();
+
+    allRecipes = data.map(item => ({
+      ...item,
+      category: item.category || "Caribbean",
+      tags: Array.isArray(item.tags) ? item.tags : buildTags(item)
+    }));
+
+    filteredRecipes = [...allRecipes];
+    renderRecipes();
+    renderPagination();
+  } catch (error) {
+    console.error("Error loading recipes:", error);
+    nutritionCardsContainer.innerHTML = `<p class="empty-state">Could not load recipes.</p>`;
+  }
+}
+
+function buildTags(item) {
+  const tags = ["Caribbean"];
+
+  if (Number(item.protein_g || 0) >= 20) {
+    tags.push("High Protein");
+  }
+
+  if (Number(item.carbs_g || 0) <= 25) {
+    tags.push("Low Carb");
+  }
+
+  return tags;
+}
+
+function applyFilters() {
+  const searchValue = recipeSearchInput.value.trim().toLowerCase();
+
+  filteredRecipes = allRecipes.filter(recipe => {
+    const ingredientText = Array.isArray(recipe.ingredients)
+      ? recipe.ingredients.join(" ").toLowerCase()
+      : "";
+
+    const matchesSearch =
+      recipe.name.toLowerCase().includes(searchValue) ||
+      (recipe.category || "").toLowerCase().includes(searchValue) ||
+      (recipe.description || "").toLowerCase().includes(searchValue) ||
+      ingredientText.includes(searchValue) ||
+      (recipe.tags || []).some(tag => tag.toLowerCase().includes(searchValue));
+
+    let matchesChip = true;
+
+    if (activeFilter === "high-protein") {
+      matchesChip = Number(recipe.protein_g || 0) >= 20;
+    } else if (activeFilter === "low-carb") {
+      matchesChip = Number(recipe.carbs_g || 0) <= 25;
+    } else if (activeFilter === "caribbean") {
+      matchesChip = true;
+    }
+
+    return matchesSearch && matchesChip;
+  });
+
+  currentPage = 1;
+  renderRecipes();
+  renderPagination();
+}
+
+function renderRecipes() {
+  nutritionCardsContainer.innerHTML = "";
+
+  if (filteredRecipes.length === 0) {
+    nutritionCardsContainer.innerHTML = `<p class="empty-state">No recipes found.</p>`;
     return;
   }
 
-  filteredFoods.forEach(food => {
-    container.innerHTML += `
-      <div class="recipe-card">
+  const start = (currentPage - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const recipesToShow = filteredRecipes.slice(start, end);
 
+  recipesToShow.forEach(recipe => {
+    nutritionCardsContainer.innerHTML += `
+      <div class="recipe-card" onclick="openRecipeModal(${recipe.id})">
         <div class="recipe-image-placeholder"></div>
 
         <div class="recipe-card-body">
-          <h3>${food.name}</h3>
+          <h3>${recipe.name}</h3>
 
-          <p class="recipe-tags">
-            ${getTags(food).join(" • ")}
-          </p>
+          <p class="recipe-tags">${recipe.tags.join(" • ")}</p>
 
           <div class="recipe-macro-preview">
-            <span>P: ${food.protein}g</span>
-            <span>C: ${food.carbs}g</span>
-            <span>F: ${food.fat}g</span>
+            <span>P: ${recipe.protein_g}g</span>
+            <span>C: ${recipe.carbs_g}g</span>
+            <span>F: ${recipe.fat_g}g</span>
           </div>
-
         </div>
       </div>
     `;
   });
 }
 
-function getTags(food) {
-  let tags = ["Caribbean"];
+function renderPagination() {
+  paginationContainer.innerHTML = "";
 
-  if (food.protein >= 20) tags.push("High Protein");
-  if (food.carbs <= 25) tags.push("Low Carb");
+  const pageCount = Math.ceil(filteredRecipes.length / itemsPerPage);
 
-  return tags;
+  if (pageCount <= 1) {
+    return;
+  }
+
+  for (let i = 1; i <= pageCount; i++) {
+    paginationContainer.innerHTML += `
+      <button class="pagination-btn ${i === currentPage ? "active-page" : ""}" onclick="goToPage(${i})">
+        ${i}
+      </button>
+    `;
+  }
 }
 
-function applyFilters() {
-  const search = searchInput.value.toLowerCase();
-
-  filteredFoods = foods.filter(food => {
-    const matchesSearch = food.name.toLowerCase().includes(search);
-
-    let matchesFilter = true;
-
-    if (activeFilter === "protein") {
-      matchesFilter = food.protein >= 20;
-    }
-
-    if (activeFilter === "lowcarb") {
-      matchesFilter = food.carbs <= 25;
-    }
-
-    return matchesSearch && matchesFilter;
-  });
-
-  renderFoods();
+function goToPage(page) {
+  currentPage = page;
+  renderRecipes();
+  renderPagination();
 }
 
-searchInput.addEventListener("input", applyFilters);
+function openRecipeModal(recipeId) {
+  const recipe = allRecipes.find(item => item.id === recipeId);
 
-document.querySelectorAll(".chip-btn").forEach(btn => {
-  btn.addEventListener("click", function () {
+  if (!recipe) {
+    return;
+  }
 
-    document.querySelectorAll(".chip-btn")
-      .forEach(b => b.classList.remove("active-chip"));
+  const ingredientsHtml = Array.isArray(recipe.ingredients)
+    ? `<ul class="recipe-ingredients-list">${recipe.ingredients.map(item => `<li>${item}</li>`).join("")}</ul>`
+    : `<p class="muted-text">No ingredients listed.</p>`;
 
+  recipeModalBody.innerHTML = `
+    <div class="recipe-detail-image"></div>
+    <h2>${recipe.name}</h2>
+    <p class="muted-text">${recipe.tags.join(" • ")}</p>
+    <p class="muted-text">${recipe.description || ""}</p>
+
+    <div class="recipe-detail-grid">
+      <div class="recipe-detail-stat">
+        <strong>${recipe.calories}</strong>
+        <span>Calories</span>
+      </div>
+      <div class="recipe-detail-stat">
+        <strong>${recipe.protein_g}g</strong>
+        <span>Protein</span>
+      </div>
+      <div class="recipe-detail-stat">
+        <strong>${recipe.carbs_g}g</strong>
+        <span>Carbs</span>
+      </div>
+      <div class="recipe-detail-stat">
+        <strong>${recipe.fat_g}g</strong>
+        <span>Fat</span>
+      </div>
+      <div class="recipe-detail-stat">
+        <strong>${recipe.fiber_g}g</strong>
+        <span>Fiber</span>
+      </div>
+      <div class="recipe-detail-stat">
+        <strong>${recipe.sugar_g}g</strong>
+        <span>Sugar</span>
+      </div>
+      <div class="recipe-detail-stat">
+        <strong>${recipe.sodium_mg}mg</strong>
+        <span>Sodium</span>
+      </div>
+      <div class="recipe-detail-stat">
+        <strong>${recipe.serving_size}</strong>
+        <span>Serving</span>
+      </div>
+    </div>
+
+    <h3>Ingredients</h3>
+    ${ingredientsHtml}
+  `;
+
+  recipeModal.classList.remove("hidden");
+}
+
+function closeModal() {
+  recipeModal.classList.add("hidden");
+}
+
+recipeSearchBtn.addEventListener("click", applyFilters);
+recipeSearchInput.addEventListener("input", applyFilters);
+
+chipButtons.forEach(button => {
+  button.addEventListener("click", function () {
+    chipButtons.forEach(btn => btn.classList.remove("active-chip"));
     this.classList.add("active-chip");
     activeFilter = this.dataset.filter;
-
     applyFilters();
   });
 });
 
-loadFoods();
+closeRecipeModal.addEventListener("click", closeModal);
+
+recipeModal.addEventListener("click", function (event) {
+  if (event.target === recipeModal) {
+    closeModal();
+  }
+});
+
+updateUserStatus();
+loadRecipes();

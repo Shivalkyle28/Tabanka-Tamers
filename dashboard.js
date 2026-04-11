@@ -21,7 +21,7 @@ function getUserStorageKey(baseKey) {
   return currentUser ? `${baseKey}_${currentUser.username}` : null;
 }
 
-function logoutUser() {
+function logoutUserLocal() {
   localStorage.removeItem("currentUser");
   window.location.href = "../index.html";
 }
@@ -46,9 +46,9 @@ function loadDashboardData() {
   const savedWorkouts = JSON.parse(localStorage.getItem(workoutsKey)) || [];
 
   const calories = favoriteFoods.reduce((sum, food) => sum + Number(food.calories || 0), 0);
-  const protein = favoriteFoods.reduce((sum, food) => sum + Number(food.protein || 0), 0);
-  const carbs = favoriteFoods.reduce((sum, food) => sum + Number(food.carbs || 0), 0);
-  const fat = favoriteFoods.reduce((sum, food) => sum + Number(food.fat || 0), 0);
+  const protein = favoriteFoods.reduce((sum, food) => sum + Number(food.protein_g || 0), 0);
+  const carbs = favoriteFoods.reduce((sum, food) => sum + Number(food.carbs_g || 0), 0);
+  const fat = favoriteFoods.reduce((sum, food) => sum + Number(food.fat_g || 0), 0);
 
   totalFoods.textContent = favoriteFoods.length;
   totalSavedWorkouts.textContent = savedWorkouts.length;
@@ -104,7 +104,7 @@ function renderSavedWorkouts(savedWorkouts) {
     });
 }
 
-logoutBtn.addEventListener("click", logoutUser);
+logoutBtn.addEventListener("click", logoutUserLocal);
 
 protectPage();
 updateUserStatus();
