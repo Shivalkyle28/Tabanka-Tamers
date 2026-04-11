@@ -91,9 +91,9 @@
           <div class="card">
             <h3>${food.name}</h3>
             <p><strong>Calories:</strong> ${food.calories} kcal</p>
-            <p><strong>Protein:</strong> ${food.protein} g</p>
-            <p><strong>Carbs:</strong> ${food.carbs} g</p>
-            <p><strong>Fat:</strong> ${food.fat} g</p>
+            <p><strong>Protein:</strong> ${food.protein_g || 0} g</p>
+            <p><strong>Carbs:</strong> ${food.carbs_g || 0} g</p>
+            <p><strong>Fat:</strong> ${food.fat_g || 0} g</p>
             <button class="btn-secondary remove-btn" onclick="removeFavoriteFood(${food.id})">
               Remove
             </button>
@@ -148,9 +148,20 @@
       renderFavoriteExercises();
     }
 
-    function updateUserStatus() {
+    function updateUserStatusLocal() {
       const currentUser = getCurrentUser();
-      userStatus.textContent = currentUser ? `Logged in as ${currentUser.username}` : "Guest";
+
+      if (currentUser) {
+        userStatus.textContent = currentUser.username;
+        userStatus.classList.add("clickable-user");
+        userStatus.onclick = function () {
+          window.location.href = "profile.html";
+        };
+      } else {
+        userStatus.textContent = "Guest";
+        userStatus.classList.remove("clickable-user");
+        userStatus.onclick = null;
+      }
     }
 
     logoutBtn.addEventListener("click", function () {
@@ -158,7 +169,7 @@
     });
 
     protectPage();
-    updateUserStatus();
+    updateUserStatusLocal();
     renderFavoriteFoods();
     renderFavoriteExercises();
   </script>

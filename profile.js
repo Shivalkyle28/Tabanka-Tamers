@@ -64,5 +64,6 @@ logoutBtn.addEventListener("click", () => {
 profileForm.addEventListener("submit", saveProfile);
 
 protectPage();
-updateUserStatus();
+updateNavbarForPages();
 loadProfile();
+loadPreferences();

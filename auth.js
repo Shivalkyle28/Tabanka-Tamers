@@ -118,14 +118,43 @@ function updateAuthButton() {
 
   if (currentUser) {
     loginBtn.textContent = currentUser.username;
+    loginBtn.classList.add("clickable-user");
+
     loginBtn.onclick = function () {
-      window.location.href = "pages/dashboard.html";
+      window.location.href = "pages/profile.html"; // 🔥 change here
     };
   } else {
     loginBtn.textContent = "Login";
+    loginBtn.classList.remove("clickable-user");
+
     loginBtn.onclick = function () {
       window.location.href = "pages/auth.html";
     };
+  }
+}
+
+function updateNavbarForPages() {
+  const currentUser = getCurrentUser();
+
+  const userStatus = document.getElementById("userStatus");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  if (userStatus) {
+    if (currentUser) {
+      userStatus.textContent = currentUser.username;
+      userStatus.classList.add("clickable-user");
+
+      userStatus.onclick = function () {
+        window.location.href = "profile.html";
+      };
+    } else {
+      userStatus.textContent = "Guest";
+      userStatus.classList.remove("clickable-user");
+    }
+  }
+
+  if (logoutBtn) {
+    logoutBtn.onclick = logoutUser;
   }
 }
 

@@ -31,7 +31,18 @@ function protectPage() {
 
 function updateUserStatus() {
   const currentUser = getCurrentUser();
-  userStatus.textContent = currentUser ? `Logged in as ${currentUser.username}` : "Guest";
+
+  if (currentUser) {
+    userStatus.textContent = currentUser.username;
+    userStatus.classList.add("clickable-user");
+    userStatus.onclick = function () {
+      window.location.href = "profile.html";
+    };
+  } else {
+    userStatus.textContent = "Guest";
+    userStatus.classList.remove("clickable-user");
+    userStatus.onclick = null;
+  }
 }
 
 function getSavedWorkouts() {
@@ -39,8 +50,8 @@ function getSavedWorkouts() {
   return JSON.parse(localStorage.getItem(key)) || [];
 }
 
-function getFavoriteFoods() {
-  const key = getUserStorageKey("favoriteFoods");
+function getDailyNutritionLog() {
+  const key = getUserStorageKey("dailyNutritionLog");
   return JSON.parse(localStorage.getItem(key)) || [];
 }
 
@@ -60,6 +71,17 @@ function filterWorkoutsByRange(workouts, days) {
   return workouts.filter(workout => {
     const workoutDate = new Date(workout.date);
     const diffMs = now - workoutDate;
+    const diffDays = diffMs / (1000 * 60 * 60 * 24);
+    return diffDays <= days;
+  });
+}
+
+function filterNutritionByRange(entries, days) {
+  const now = new Date();
+
+  return entries.filter(entry => {
+    const entryDate = new Date(entry.date);
+    const diffMs = now - entryDate;
     const diffDays = diffMs / (1000 * 60 * 60 * 24);
     return diffDays <= days;
   });
@@ -115,10 +137,7 @@ function drawStrengthChart(workouts) {
       0
     );
 
-    return {
-      date: new Date(workout.date),
-      value: maxWeight
-    };
+    return { value: maxWeight };
   });
 
   const maxValue = Math.max(...strengthPoints.map(point => point.value), 1);
@@ -172,9 +191,9 @@ function drawBodyweightChart(profile) {
   drawAxes(ctx, width, height, padding);
 
   const points = [
-    { label: "Start", value: current || goal || 0 },
-    { label: "Now", value: current || goal || 0 },
-    { label: "Goal", value: goal || current || 0 }
+    { value: current || goal || 0 },
+    { value: current || goal || 0 },
+    { value: goal || current || 0 }
   ];
 
   const maxValue = Math.max(...points.map(point => point.value), 1);
@@ -199,11 +218,61 @@ function drawBodyweightChart(profile) {
   ctx.stroke();
 }
 
-function drawMacroChart(foods) {
-  if (!foods.length) {
-    drawEmptyChart(macroChart, "No nutrition data available.");
+function calculateMacroAverages(entries) {
+  if (!entries.length) {
+    return {
+      protein: 0,
+      carbs: 0,
+      fat: 0,
+      daysLogged: 0
+    };
+  }
+
+  const dailyMap = {};
+
+  entries.forEach(entry => {
+    if (!dailyMap[entry.date]) {
+      dailyMap[entry.date] = {
+        protein: 0,
+        carbs: 0,
+        fat: 0,
+        calories: 0
+      };
+    }
+
+    dailyMap[entry.date].protein += Number(entry.protein_g || 0);
+    dailyMap[entry.date].carbs += Number(entry.carbs_g || 0);
+    dailyMap[entry.date].fat += Number(entry.fat_g || 0);
+    dailyMap[entry.date].calories += Number(entry.calories || 0);
+  });
+
+  const daysLogged = Object.keys(dailyMap).length || 1;
+
+  let totalProtein = 0;
+  let totalCarbs = 0;
+  let totalFat = 0;
+
+  Object.values(dailyMap).forEach(day => {
+    totalProtein += day.protein;
+    totalCarbs += day.carbs;
+    totalFat += day.fat;
+  });
+
+  return {
+    protein: Math.round(totalProtein / daysLogged),
+    carbs: Math.round(totalCarbs / daysLogged),
+    fat: Math.round(totalFat / daysLogged),
+    daysLogged
+  };
+}
+
+function drawMacroChart(entries) {
+  if (!entries.length) {
+    drawEmptyChart(macroChart, "No nutrition log data available.");
     return;
   }
+
+  const averages = calculateMacroAverages(entries);
 
   const ctx = macroChart.getContext("2d");
   resizeCanvas(macroChart);
@@ -215,14 +284,10 @@ function drawMacroChart(foods) {
   ctx.clearRect(0, 0, width, height);
   drawAxes(ctx, width, height, padding);
 
-  const protein = foods.reduce((sum, food) => sum + Number(food.protein || 0), 0) / foods.length;
-  const carbs = foods.reduce((sum, food) => sum + Number(food.carbs || 0), 0) / foods.length;
-  const fat = foods.reduce((sum, food) => sum + Number(food.fat || 0), 0) / foods.length;
-
   const values = [
-    { label: "Protein", value: protein, color: "#7b7f87" },
-    { label: "Carbs", value: carbs, color: "#a8adb8" },
-    { label: "Fat", value: fat, color: "#d8dbe2" }
+    { label: "Protein", value: averages.protein, color: "#7b7f87" },
+    { label: "Carbs", value: averages.carbs, color: "#a8adb8" },
+    { label: "Fat", value: averages.fat, color: "#d8dbe2" }
   ];
 
   const maxValue = Math.max(...values.map(item => item.value), 1);
@@ -248,48 +313,131 @@ function drawMacroChart(foods) {
 function calculateCurrentStreak(workouts) {
   if (!workouts.length) return 0;
 
-  const uniqueDays = [...new Set(
+  const workoutDays = [...new Set(
     workouts.map(workout => new Date(workout.date).toDateString())
   )];
 
-  uniqueDays.sort((a, b) => new Date(b) - new Date(a));
-
   let streak = 0;
-  let currentDate = new Date();
+  const currentDate = new Date();
 
-  for (const day of uniqueDays) {
+  for (let i = 0; i < 365; i++) {
     const dateString = currentDate.toDateString();
 
-    if (day === dateString) {
+    if (workoutDays.includes(dateString)) {
       streak++;
       currentDate.setDate(currentDate.getDate() - 1);
-    } else {
+    } else if (streak > 0) {
       break;
+    } else {
+      currentDate.setDate(currentDate.getDate() - 1);
     }
   }
 
   return streak;
 }
 
-function updateSummaryStats(workouts, foods) {
+function calculateAvgCalories(entries) {
+  if (!entries.length) return 0;
+
+  const dailyMap = {};
+
+  entries.forEach(entry => {
+    if (!dailyMap[entry.date]) {
+      dailyMap[entry.date] = 0;
+    }
+
+    dailyMap[entry.date] += Number(entry.calories || 0);
+  });
+
+  const daysLogged = Object.keys(dailyMap).length || 1;
+  const totalCalories = Object.values(dailyMap).reduce((sum, value) => sum + value, 0);
+
+  return Math.round(totalCalories / daysLogged);
+}
+
+function calculateAdaptiveGoals(profile) {
+  const currentWeight = Number(profile.currentWeight || 0);
+  const goalWeight = Number(profile.goalWeight || 0);
+  const fitnessGoal = String(profile.fitnessGoal || "").toLowerCase();
+
+  const fallbackCalories = 2200;
+  const fallbackProtein = 140;
+  const fallbackCarbs = 220;
+  const fallbackFat = 70;
+
+  if (!currentWeight) {
+    return {
+      calories: fallbackCalories,
+      protein: fallbackProtein,
+      carbs: fallbackCarbs,
+      fat: fallbackFat
+    };
+  }
+
+  let caloriesTarget = currentWeight * 15;
+  let proteinTarget = currentWeight * 0.8;
+  let carbsTarget = currentWeight * 1.0;
+  let fatTarget = currentWeight * 0.3;
+
+  if (fitnessGoal === "lose weight") {
+    caloriesTarget = currentWeight * 12;
+    proteinTarget = currentWeight * 0.9;
+    carbsTarget = currentWeight * 0.7;
+    fatTarget = currentWeight * 0.3;
+  } else if (fitnessGoal === "gain muscle") {
+    caloriesTarget = currentWeight * 17;
+    proteinTarget = currentWeight * 1.0;
+    carbsTarget = currentWeight * 1.5;
+    fatTarget = currentWeight * 0.35;
+  } else if (fitnessGoal === "improve endurance") {
+    caloriesTarget = currentWeight * 16;
+    proteinTarget = currentWeight * 0.8;
+    carbsTarget = currentWeight * 1.6;
+    fatTarget = currentWeight * 0.3;
+  } else if (fitnessGoal === "maintain" || fitnessGoal === "general fitness") {
+    caloriesTarget = currentWeight * 15;
+    proteinTarget = currentWeight * 0.85;
+    carbsTarget = currentWeight * 1.1;
+    fatTarget = currentWeight * 0.32;
+  }
+
+  if (goalWeight && fitnessGoal === "lose weight" && goalWeight < currentWeight) {
+    caloriesTarget -= 100;
+  }
+
+  if (goalWeight && fitnessGoal === "gain muscle" && goalWeight > currentWeight) {
+    caloriesTarget += 100;
+  }
+
+  return {
+    calories: Math.round(caloriesTarget),
+    protein: Math.round(proteinTarget),
+    carbs: Math.round(carbsTarget),
+    fat: Math.round(fatTarget)
+  };
+}
+
+function updateSummaryStats(workouts, nutritionEntries, profile) {
   totalWorkoutsStat.textContent = workouts.length;
-
-  const totalCalories = foods.reduce((sum, food) => sum + Number(food.calories || 0), 0);
-  const avgCalories = foods.length ? Math.round(totalCalories / foods.length) : 0;
-  avgCaloriesStat.textContent = avgCalories;
-
+  avgCaloriesStat.textContent = calculateAvgCalories(nutritionEntries);
   currentStreakStat.textContent = calculateCurrentStreak(workouts);
+
+  const goals = calculateAdaptiveGoals(profile);
+
+  totalWorkoutsStat.title = `Adaptive daily targets: ${goals.calories} kcal, ${goals.protein}g protein, ${goals.carbs}g carbs, ${goals.fat}g fat`;
+  avgCaloriesStat.title = `Adaptive calorie goal: ${goals.calories} kcal/day`;
+  currentStreakStat.title = `Adaptive protein goal: ${goals.protein} g/day`;
 }
 
 function renderProgressPage() {
   const workouts = filterWorkoutsByRange(getSavedWorkouts(), selectedRangeDays);
-  const foods = getFavoriteFoods();
+  const nutritionEntries = filterNutritionByRange(getDailyNutritionLog(), selectedRangeDays);
   const profile = getProfile();
 
   drawStrengthChart(workouts);
   drawBodyweightChart(profile);
-  drawMacroChart(foods);
-  updateSummaryStats(workouts, foods);
+  drawMacroChart(nutritionEntries);
+  updateSummaryStats(workouts, nutritionEntries, profile);
 }
 
 filterButtons.forEach(button => {

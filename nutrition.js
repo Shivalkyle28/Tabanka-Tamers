@@ -11,6 +11,7 @@ const closeRecipeModal = document.getElementById("closeRecipeModal");
 
 const userStatus = document.getElementById("userStatus");
 const loginBtn = document.getElementById("loginBtn");
+const logoutBtn = document.getElementById("logoutBtn");
 
 let allRecipes = [];
 let filteredRecipes = [];
@@ -22,21 +23,50 @@ function getCurrentUser() {
   return JSON.parse(localStorage.getItem("currentUser"));
 }
 
+function getUserStorageKey(baseKey) {
+  const currentUser = getCurrentUser();
+  return currentUser ? `${baseKey}_${currentUser.username}` : null;
+}
+
 function updateUserStatus() {
   const currentUser = getCurrentUser();
 
   if (currentUser) {
-    userStatus.textContent = `Logged in as ${currentUser.username}`;
-    loginBtn.textContent = currentUser.username;
-    loginBtn.onclick = function () {
-      window.location.href = "profile.html";
-    };
+    if (userStatus) {
+      userStatus.textContent = currentUser.username;
+      userStatus.classList.add("clickable-user");
+      userStatus.onclick = function () {
+        window.location.href = "profile.html";
+      };
+    }
+
+    if (loginBtn) {
+      loginBtn.textContent = currentUser.username;
+      loginBtn.onclick = function () {
+        window.location.href = "profile.html";
+      };
+    }
+
+    if (logoutBtn) {
+      logoutBtn.style.display = "inline-block";
+    }
   } else {
-    userStatus.textContent = "Guest";
-    loginBtn.textContent = "Login";
-    loginBtn.onclick = function () {
-      window.location.href = "auth.html";
-    };
+    if (userStatus) {
+      userStatus.textContent = "Guest";
+      userStatus.classList.remove("clickable-user");
+      userStatus.onclick = null;
+    }
+
+    if (loginBtn) {
+      loginBtn.textContent = "Login";
+      loginBtn.onclick = function () {
+        window.location.href = "auth.html";
+      };
+    }
+
+    if (logoutBtn) {
+      logoutBtn.style.display = "none";
+    }
   }
 }
 
@@ -74,6 +104,73 @@ function buildTags(item) {
   return tags;
 }
 
+function addFavoriteFood(recipeId) {
+  const currentUser = getCurrentUser();
+
+  if (!currentUser) {
+    alert("Log in to save favorite foods.");
+    return;
+  }
+
+  const selectedRecipe = allRecipes.find(recipe => recipe.id === recipeId);
+
+  if (!selectedRecipe) {
+    alert("Recipe not found.");
+    return;
+  }
+
+  const storageKey = getUserStorageKey("favoriteFoods");
+  let favoriteFoods = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+  const alreadyExists = favoriteFoods.some(food => food.id === recipeId);
+
+  if (alreadyExists) {
+    alert("This food is already in your favorites.");
+    return;
+  }
+
+  favoriteFoods.push(selectedRecipe);
+  localStorage.setItem(storageKey, JSON.stringify(favoriteFoods));
+
+  alert(`${selectedRecipe.name} added to favorites.`);
+}
+
+function addFoodToToday(recipeId) {
+  const currentUser = getCurrentUser();
+
+  if (!currentUser) {
+    alert("Log in to track nutrition.");
+    return;
+  }
+
+  const selectedRecipe = allRecipes.find(recipe => recipe.id === recipeId);
+
+  if (!selectedRecipe) {
+    alert("Recipe not found.");
+    return;
+  }
+
+  const storageKey = getUserStorageKey("dailyNutritionLog");
+  let dailyLog = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+  const today = new Date().toISOString().split("T")[0];
+
+  dailyLog.push({
+    entryId: Date.now(),
+    date: today,
+    foodId: selectedRecipe.id,
+    name: selectedRecipe.name,
+    calories: Number(selectedRecipe.calories || 0),
+    protein_g: Number(selectedRecipe.protein_g || 0),
+    carbs_g: Number(selectedRecipe.carbs_g || 0),
+    fat_g: Number(selectedRecipe.fat_g || 0)
+  });
+
+  localStorage.setItem(storageKey, JSON.stringify(dailyLog));
+
+  alert(`${selectedRecipe.name} added to today’s nutrition log.`);
+}
+
 function applyFilters() {
   const searchValue = recipeSearchInput.value.trim().toLowerCase();
 
@@ -91,12 +188,10 @@ function applyFilters() {
 
     let matchesChip = true;
 
-    if (activeFilter === "high-protein") {
+    if (activeFilter === "protein") {
       matchesChip = Number(recipe.protein_g || 0) >= 20;
-    } else if (activeFilter === "low-carb") {
+    } else if (activeFilter === "lowcarb") {
       matchesChip = Number(recipe.carbs_g || 0) <= 25;
-    } else if (activeFilter === "caribbean") {
-      matchesChip = true;
     }
 
     return matchesSearch && matchesChip;
@@ -126,14 +221,8 @@ function renderRecipes() {
 
         <div class="recipe-card-body">
           <h3>${recipe.name}</h3>
-
           <p class="recipe-tags">${recipe.tags.join(" • ")}</p>
-
-          <div class="recipe-macro-preview">
-            <span>P: ${recipe.protein_g}g</span>
-            <span>C: ${recipe.carbs_g}g</span>
-            <span>F: ${recipe.fat_g}g</span>
-          </div>
+          <p class="muted-text">Click to view details</p>
         </div>
       </div>
     `;
@@ -171,9 +260,61 @@ function openRecipeModal(recipeId) {
     return;
   }
 
+  const currentUser = getCurrentUser();
+
   const ingredientsHtml = Array.isArray(recipe.ingredients)
     ? `<ul class="recipe-ingredients-list">${recipe.ingredients.map(item => `<li>${item}</li>`).join("")}</ul>`
     : `<p class="muted-text">No ingredients listed.</p>`;
+
+  const statsSection = currentUser
+    ? `
+      <div class="recipe-detail-grid">
+        <div class="recipe-detail-stat">
+          <strong>${recipe.calories}</strong>
+          <span>Calories</span>
+        </div>
+        <div class="recipe-detail-stat">
+          <strong>${recipe.protein_g}g</strong>
+          <span>Protein</span>
+        </div>
+        <div class="recipe-detail-stat">
+          <strong>${recipe.carbs_g}g</strong>
+          <span>Carbs</span>
+        </div>
+        <div class="recipe-detail-stat">
+          <strong>${recipe.fat_g}g</strong>
+          <span>Fat</span>
+        </div>
+        <div class="recipe-detail-stat">
+          <strong>${recipe.fiber_g}g</strong>
+          <span>Fiber</span>
+        </div>
+        <div class="recipe-detail-stat">
+          <strong>${recipe.sugar_g}g</strong>
+          <span>Sugar</span>
+        </div>
+        <div class="recipe-detail-stat">
+          <strong>${recipe.sodium_mg}mg</strong>
+          <span>Sodium</span>
+        </div>
+        <div class="recipe-detail-stat">
+          <strong>${recipe.serving_size}</strong>
+          <span>Serving</span>
+        </div>
+      </div>
+
+      <div class="landing-actions">
+        <button class="btn-primary" onclick="addFavoriteFood(${recipe.id})">Add to Favorites</button>
+        <button class="btn-secondary" onclick="addFoodToToday(${recipe.id})">Add to Today's Log</button>
+      </div>
+    `
+    : `
+      <div class="summary-card">
+        <p class="muted-text">
+          Log in to see full nutrition stats, save favorites, and track this food in your daily nutrition log.
+        </p>
+      </div>
+    `;
 
   recipeModalBody.innerHTML = `
     <div class="recipe-detail-image"></div>
@@ -181,40 +322,7 @@ function openRecipeModal(recipeId) {
     <p class="muted-text">${recipe.tags.join(" • ")}</p>
     <p class="muted-text">${recipe.description || ""}</p>
 
-    <div class="recipe-detail-grid">
-      <div class="recipe-detail-stat">
-        <strong>${recipe.calories}</strong>
-        <span>Calories</span>
-      </div>
-      <div class="recipe-detail-stat">
-        <strong>${recipe.protein_g}g</strong>
-        <span>Protein</span>
-      </div>
-      <div class="recipe-detail-stat">
-        <strong>${recipe.carbs_g}g</strong>
-        <span>Carbs</span>
-      </div>
-      <div class="recipe-detail-stat">
-        <strong>${recipe.fat_g}g</strong>
-        <span>Fat</span>
-      </div>
-      <div class="recipe-detail-stat">
-        <strong>${recipe.fiber_g}g</strong>
-        <span>Fiber</span>
-      </div>
-      <div class="recipe-detail-stat">
-        <strong>${recipe.sugar_g}g</strong>
-        <span>Sugar</span>
-      </div>
-      <div class="recipe-detail-stat">
-        <strong>${recipe.sodium_mg}mg</strong>
-        <span>Sodium</span>
-      </div>
-      <div class="recipe-detail-stat">
-        <strong>${recipe.serving_size}</strong>
-        <span>Serving</span>
-      </div>
-    </div>
+    ${statsSection}
 
     <h3>Ingredients</h3>
     ${ingredientsHtml}
@@ -227,8 +335,13 @@ function closeModal() {
   recipeModal.classList.add("hidden");
 }
 
-recipeSearchBtn.addEventListener("click", applyFilters);
-recipeSearchInput.addEventListener("input", applyFilters);
+if (recipeSearchBtn) {
+  recipeSearchBtn.addEventListener("click", applyFilters);
+}
+
+if (recipeSearchInput) {
+  recipeSearchInput.addEventListener("input", applyFilters);
+}
 
 chipButtons.forEach(button => {
   button.addEventListener("click", function () {
@@ -239,13 +352,23 @@ chipButtons.forEach(button => {
   });
 });
 
-closeRecipeModal.addEventListener("click", closeModal);
+if (closeRecipeModal) {
+  closeRecipeModal.addEventListener("click", closeModal);
+}
 
-recipeModal.addEventListener("click", function (event) {
-  if (event.target === recipeModal) {
-    closeModal();
-  }
-});
+if (recipeModal) {
+  recipeModal.addEventListener("click", function (event) {
+    if (event.target === recipeModal) {
+      closeModal();
+    }
+  });
+}
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", function () {
+    logoutUser();
+  });
+}
 
 updateUserStatus();
 loadRecipes();

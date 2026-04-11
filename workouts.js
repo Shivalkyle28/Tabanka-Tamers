@@ -42,9 +42,14 @@ let restSeconds = 60;
 let restTimeRemaining = 60;
 let restTimerInterval = null;
 
-/* ----------------------------- */
-/* Body Highlighting             */
-/* ----------------------------- */
+function getCurrentUser() {
+  return JSON.parse(localStorage.getItem("currentUser"));
+}
+
+function getUserStorageKey(baseKey) {
+  const currentUser = getCurrentUser();
+  return currentUser ? `${baseKey}_${currentUser.username}` : null;
+}
 
 function clearBodyHighlights() {
   [frontBodySvg, backBodySvg].forEach(svgObject => {
@@ -104,37 +109,27 @@ function highlightMuscleParts(muscles) {
   });
 }
 
-/* ----------------------------- */
-/* User Helpers                  */
-/* ----------------------------- */
-
-function getCurrentUser() {
-  return JSON.parse(localStorage.getItem("currentUser"));
-}
-
-function getUserStorageKey(baseKey) {
-  const currentUser = getCurrentUser();
-  return currentUser ? `${baseKey}_${currentUser.username}` : null;
-}
-
 function updateUserStatus() {
   const currentUser = getCurrentUser();
-  userStatus.textContent = currentUser ? `Logged in as ${currentUser.username}` : "Guest";
-}
 
-/* ----------------------------- */
-/* Time Helpers                  */
-/* ----------------------------- */
+  if (currentUser) {
+    userStatus.textContent = currentUser.username;
+    userStatus.classList.add("clickable-user");
+    userStatus.onclick = function () {
+      window.location.href = "profile.html";
+    };
+  } else {
+    userStatus.textContent = "Guest";
+    userStatus.classList.remove("clickable-user");
+    userStatus.onclick = null;
+  }
+}
 
 function formatTime(totalSeconds) {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
-
-/* ----------------------------- */
-/* Workout Timer                 */
-/* ----------------------------- */
 
 function updateWorkoutTimerDisplay() {
   workoutTimerDisplay.textContent = formatTime(workoutSeconds);
@@ -159,10 +154,6 @@ function resetWorkoutTimer() {
   workoutSeconds = 0;
   updateWorkoutTimerDisplay();
 }
-
-/* ----------------------------- */
-/* Rest Timer                    */
-/* ----------------------------- */
 
 function updateRestTimerDisplay() {
   restTimerDisplay.textContent = formatTime(restTimeRemaining);
@@ -199,10 +190,6 @@ function setRestPreset(seconds) {
   restTimeRemaining = seconds;
   updateRestTimerDisplay();
 }
-
-/* ----------------------------- */
-/* Exercise Loading              */
-/* ----------------------------- */
 
 function sortExercisesByLevel(exercises) {
   const levelOrder = {
@@ -263,6 +250,37 @@ function getExerciseImageUrl(exercise) {
   return `${EXERCISE_IMAGE_BASE_URL}${exercise.images[0]}`;
 }
 
+function addFavoriteExercise(exerciseName) {
+  const currentUser = getCurrentUser();
+
+  if (!currentUser) {
+    alert("Please log in to save favorite exercises.");
+    return;
+  }
+
+  const selectedExercise = allExercises.find(exercise => exercise.name === exerciseName);
+
+  if (!selectedExercise) {
+    alert("Exercise not found.");
+    return;
+  }
+
+  const storageKey = getUserStorageKey("favoriteExercises");
+  let favoriteExercises = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+  const alreadyExists = favoriteExercises.some(exercise => exercise.name === exerciseName);
+
+  if (alreadyExists) {
+    alert("This exercise is already in your favorites.");
+    return;
+  }
+
+  favoriteExercises.push(selectedExercise);
+  localStorage.setItem(storageKey, JSON.stringify(favoriteExercises));
+
+  alert(`${selectedExercise.name} added to favorites.`);
+}
+
 function displayExercises(exercises) {
   workoutExercisesContainer.innerHTML = "";
 
@@ -293,8 +311,13 @@ function displayExercises(exercises) {
         <p><strong>Category:</strong> ${exercise.category || "N/A"}</p>
         <p><strong>Level:</strong> ${exercise.level || "N/A"}</p>
         <p><strong>Primary Muscles:</strong> ${primaryMuscles}</p>
+
         <button class="btn-primary add-workout-btn" onclick="addExerciseToWorkout('${exercise.name.replace(/'/g, "\\'")}')">
           Add to Workout
+        </button>
+
+        <button class="btn-secondary add-workout-btn" onclick="addFavoriteExercise('${exercise.name.replace(/'/g, "\\'")}')">
+          Add to Favorites
         </button>
       </div>
     `;
@@ -324,10 +347,6 @@ function filterExercises() {
 
   displayExercises(filteredExercises);
 }
-
-/* ----------------------------- */
-/* Current Workout               */
-/* ----------------------------- */
 
 function addExerciseToWorkout(exerciseName) {
   const selectedExercise = allExercises.find(exercise => exercise.name === exerciseName);
@@ -441,10 +460,6 @@ function updateSelectedMuscles(muscles) {
   highlightMuscleParts(muscles);
 }
 
-/* ----------------------------- */
-/* Save Workouts                 */
-/* ----------------------------- */
-
 function saveWorkout() {
   const currentUser = getCurrentUser();
 
@@ -476,10 +491,6 @@ function saveWorkout() {
   clearWorkout();
   resetWorkoutTimer();
 }
-
-/* ----------------------------- */
-/* Events                        */
-/* ----------------------------- */
 
 if (logoutBtn) {
   logoutBtn.addEventListener("click", function () {
@@ -537,10 +548,6 @@ if (saveWorkoutBtn) {
 if (clearWorkoutBtn) {
   clearWorkoutBtn.addEventListener("click", clearWorkout);
 }
-
-/* ----------------------------- */
-/* Init                          */
-/* ----------------------------- */
 
 updateUserStatus();
 updateWorkoutTimerDisplay();

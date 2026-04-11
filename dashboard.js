@@ -8,7 +8,14 @@ const summaryProtein = document.getElementById("summaryProtein");
 const summaryCarbs = document.getElementById("summaryCarbs");
 const summaryFat = document.getElementById("summaryFat");
 
+const todayCalories = document.getElementById("todayCalories");
+const todayProtein = document.getElementById("todayProtein");
+const todayCarbs = document.getElementById("todayCarbs");
+const todayFat = document.getElementById("todayFat");
+
+const todayLogContainer = document.getElementById("todayLogContainer");
 const savedWorkoutsContainer = document.getElementById("savedWorkoutsContainer");
+
 const userStatus = document.getElementById("userStatus");
 const logoutBtn = document.getElementById("logoutBtn");
 
@@ -33,9 +40,26 @@ function protectPage() {
   }
 }
 
-function updateUserStatus() {
+function updateNavbarForPagesLocal() {
   const currentUser = getCurrentUser();
-  userStatus.textContent = currentUser ? `Logged in as ${currentUser.username}` : "Guest";
+
+  if (userStatus) {
+    if (currentUser) {
+      userStatus.textContent = currentUser.username;
+      userStatus.classList.add("clickable-user");
+      userStatus.onclick = function () {
+        window.location.href = "profile.html";
+      };
+    } else {
+      userStatus.textContent = "Guest";
+      userStatus.classList.remove("clickable-user");
+      userStatus.onclick = null;
+    }
+  }
+}
+
+function getTodayString() {
+  return new Date().toISOString().split("T")[0];
 }
 
 function loadDashboardData() {
@@ -60,6 +84,7 @@ function loadDashboardData() {
   summaryCarbs.textContent = `${carbs} g`;
   summaryFat.textContent = `${fat} g`;
 
+  renderTodayLog();
   renderSavedWorkouts(savedWorkouts);
 }
 
@@ -67,6 +92,16 @@ function formatTime(totalSeconds) {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function deleteSavedWorkout(workoutId) {
+  const storageKey = getUserStorageKey("savedWorkouts");
+  let savedWorkouts = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+  savedWorkouts = savedWorkouts.filter(workout => workout.id !== workoutId);
+  localStorage.setItem(storageKey, JSON.stringify(savedWorkouts));
+
+  loadDashboardData();
 }
 
 function renderSavedWorkouts(savedWorkouts) {
@@ -84,8 +119,13 @@ function renderSavedWorkouts(savedWorkouts) {
       savedWorkoutsContainer.innerHTML += `
         <div class="saved-workout-card">
           <div class="saved-workout-header">
-            <h3>Workout Session</h3>
-            <p class="muted-text">${workout.date}</p>
+            <div>
+              <h3>Workout Session</h3>
+              <p class="muted-text">${workout.date}</p>
+            </div>
+            <button class="btn-secondary small-btn" onclick="deleteSavedWorkout(${workout.id})">
+              Delete
+            </button>
           </div>
 
           <p><strong>Duration:</strong> ${formatTime(workout.durationSeconds)}</p>
@@ -104,8 +144,81 @@ function renderSavedWorkouts(savedWorkouts) {
     });
 }
 
+function deleteTodayLogEntry(entryId) {
+  const storageKey = getUserStorageKey("dailyNutritionLog");
+  let dailyLog = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+  dailyLog = dailyLog.filter(entry => entry.entryId !== entryId);
+  localStorage.setItem(storageKey, JSON.stringify(dailyLog));
+
+  renderTodayLog();
+}
+
+function renderTodayLog() {
+  const storageKey = getUserStorageKey("dailyNutritionLog");
+  const dailyLog = JSON.parse(localStorage.getItem(storageKey)) || [];
+  const today = getTodayString();
+
+  const todayEntries = dailyLog.filter(entry => entry.date === today);
+
+  const calories = todayEntries.reduce((sum, item) => sum + Number(item.calories || 0), 0);
+  const protein = todayEntries.reduce((sum, item) => sum + Number(item.protein_g || 0), 0);
+  const carbs = todayEntries.reduce((sum, item) => sum + Number(item.carbs_g || 0), 0);
+  const fat = todayEntries.reduce((sum, item) => sum + Number(item.fat_g || 0), 0);
+
+  todayCalories.textContent = `${calories} kcal`;
+  todayProtein.textContent = `${protein} g`;
+  todayCarbs.textContent = `${carbs} g`;
+  todayFat.textContent = `${fat} g`;
+
+  todayLogContainer.innerHTML = "";
+
+  if (todayEntries.length === 0) {
+    todayLogContainer.innerHTML = `<p class="empty-state">No foods logged for today yet.</p>`;
+    return;
+  }
+
+  todayEntries
+    .slice()
+    .reverse()
+    .forEach(entry => {
+      todayLogContainer.innerHTML += `
+        <div class="saved-workout-card">
+          <div class="saved-workout-header">
+            <div>
+              <h3>${entry.name}</h3>
+              <p class="muted-text">${entry.date}</p>
+            </div>
+            <button class="btn-secondary small-btn" onclick="deleteTodayLogEntry(${entry.entryId})">
+              Delete
+            </button>
+          </div>
+
+          <div class="saved-exercise-list">
+            <div class="saved-exercise-row">
+              <span>Calories</span>
+              <span>${entry.calories} kcal</span>
+            </div>
+            <div class="saved-exercise-row">
+              <span>Protein</span>
+              <span>${entry.protein_g} g</span>
+            </div>
+            <div class="saved-exercise-row">
+              <span>Carbs</span>
+              <span>${entry.carbs_g} g</span>
+            </div>
+            <div class="saved-exercise-row">
+              <span>Fat</span>
+              <span>${entry.fat_g} g</span>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+}
+
 logoutBtn.addEventListener("click", logoutUserLocal);
 
 protectPage();
-updateUserStatus();
+updateNavbarForPagesLocal();
 loadDashboardData();

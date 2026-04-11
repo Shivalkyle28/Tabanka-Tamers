@@ -1212,3 +1212,11 @@ img {
     grid-template-columns: 1fr;
   }
 }
+.clickable-user {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.clickable-user:hover {
+  opacity: 0.8;
+}
