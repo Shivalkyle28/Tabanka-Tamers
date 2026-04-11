@@ -9,6 +9,11 @@ const totalWorkoutsStat = document.getElementById("totalWorkoutsStat");
 const avgCaloriesStat = document.getElementById("avgCaloriesStat");
 const currentStreakStat = document.getElementById("currentStreakStat");
 
+const targetCaloriesStat = document.getElementById("targetCaloriesStat");
+const targetProteinStat = document.getElementById("targetProteinStat");
+const targetCarbsStat = document.getElementById("targetCarbsStat");
+const targetFatStat = document.getElementById("targetFatStat");
+
 const filterButtons = document.querySelectorAll(".progress-filter-btn");
 
 let selectedRangeDays = 7;
@@ -417,16 +422,19 @@ function calculateAdaptiveGoals(profile) {
   };
 }
 
-function updateSummaryStats(workouts, nutritionEntries, profile) {
+function updateDailyTargets(profile) {
+  const goals = calculateAdaptiveGoals(profile);
+
+  if (targetCaloriesStat) targetCaloriesStat.textContent = goals.calories;
+  if (targetProteinStat) targetProteinStat.textContent = `${goals.protein} g`;
+  if (targetCarbsStat) targetCarbsStat.textContent = `${goals.carbs} g`;
+  if (targetFatStat) targetFatStat.textContent = `${goals.fat} g`;
+}
+
+function updateSummaryStats(workouts, nutritionEntries) {
   totalWorkoutsStat.textContent = workouts.length;
   avgCaloriesStat.textContent = calculateAvgCalories(nutritionEntries);
   currentStreakStat.textContent = calculateCurrentStreak(workouts);
-
-  const goals = calculateAdaptiveGoals(profile);
-
-  totalWorkoutsStat.title = `Adaptive daily targets: ${goals.calories} kcal, ${goals.protein}g protein, ${goals.carbs}g carbs, ${goals.fat}g fat`;
-  avgCaloriesStat.title = `Adaptive calorie goal: ${goals.calories} kcal/day`;
-  currentStreakStat.title = `Adaptive protein goal: ${goals.protein} g/day`;
 }
 
 function renderProgressPage() {
@@ -437,7 +445,8 @@ function renderProgressPage() {
   drawStrengthChart(workouts);
   drawBodyweightChart(profile);
   drawMacroChart(nutritionEntries);
-  updateSummaryStats(workouts, nutritionEntries, profile);
+  updateSummaryStats(workouts, nutritionEntries);
+  updateDailyTargets(profile);
 }
 
 filterButtons.forEach(button => {
@@ -451,7 +460,6 @@ filterButtons.forEach(button => {
 });
 
 logoutBtn.addEventListener("click", logoutPageUser);
-
 window.addEventListener("resize", renderProgressPage);
 
 protectPage();

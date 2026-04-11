@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Progress | Tabanka Tamers</title>
+  <link rel="icon" href="../assets/images/favicon.ico">
   <link rel="stylesheet" href="../styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,7 +12,10 @@
 </head>
 <body>
   <header class="navbar">
-    <div class="logo">Tabanka Tamers</div>
+    <div class="logo">
+    <img src="../assets/images/logo.png" alt="Tabanka Tamers logo" class="logo-img">
+    <span>Tabanka Tamers</span>
+    </div>
 
     <nav>
       <a href="dashboard.html">Dashboard</a>
@@ -90,6 +94,37 @@
         </div>
       </div>
     </section>
+
+    <section class="section">
+  <div class="progress-card">
+    <div class="section-header">
+      <h2>Daily Targets</h2>
+      <p>Adaptive nutrition goals based on your profile and fitness goal.</p>
+    </div>
+
+    <div class="progress-stats-grid">
+      <div class="progress-stat-box">
+        <h4 id="targetCaloriesStat">0</h4>
+        <p>Target Calories</p>
+      </div>
+
+      <div class="progress-stat-box">
+        <h4 id="targetProteinStat">0 g</h4>
+        <p>Target Protein</p>
+      </div>
+
+      <div class="progress-stat-box">
+        <h4 id="targetCarbsStat">0 g</h4>
+        <p>Target Carbs</p>
+      </div>
+
+      <div class="progress-stat-box">
+        <h4 id="targetFatStat">0 g</h4>
+        <p>Target Fat</p>
+      </div>
+    </div>
+  </div>
+</section>
 
     <section class="section">
       <div class="progress-card">
