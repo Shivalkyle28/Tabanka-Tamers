@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Progress | CaribbeanFit</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">CaribbeanFit</div>
+
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="foods.html">Foods</a>
+      <a href="workouts.html">Workouts</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="favorites.html">Favorites</a>
+      <a href="profile.html">Profile</a>
+      <a href="progress.html">Progress</a>
+    </nav>
+
+    <div class="nav-actions">
+      <span id="userStatus" class="user-status">Guest</span>
+      <button id="logoutBtn" class="btn-secondary">Logout</button>
+    </div>
+  </header>
+
+  <main class="page-main">
+    <section class="page-hero">
+      <p class="tag">Progress & Stats</p>
+      <h1>Progress & Stats</h1>
+      <p class="subtitle">
+        Track your strength, bodyweight, nutrition trends, and key fitness stats over time.
+      </p>
+    </section>
+
+    <section class="section">
+      <div class="progress-filter-bar">
+        <button class="progress-filter-btn active-filter" data-range="7">7 Days</button>
+        <button class="progress-filter-btn" data-range="30">30 Days</button>
+        <button class="progress-filter-btn" data-range="90">3 Months</button>
+        <button class="progress-filter-btn" data-range="365">1 Year</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="progress-card">
+        <div class="section-header">
+          <h2>Strength Progress</h2>
+          <p>Weight lifted over time from your saved workouts.</p>
+        </div>
+        <canvas id="strengthChart" class="progress-chart"></canvas>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="progress-card">
+        <div class="section-header">
+          <h2>Bodyweight Trend</h2>
+          <p>Your current and goal bodyweight trend.</p>
+        </div>
+        <canvas id="bodyweightChart" class="progress-chart"></canvas>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="progress-card">
+        <div class="section-header">
+          <h2>Weekly Macro Average</h2>
+          <p>Average protein, carbs, and fat from your saved foods.</p>
+        </div>
+        <canvas id="macroChart" class="progress-chart"></canvas>
+
+        <div class="macro-legend">
+          <div class="legend-item">
+            <span class="legend-box protein-box"></span>
+            <span>Protein</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-box carbs-box"></span>
+            <span>Carbs</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-box fat-box"></span>
+            <span>Fat</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="progress-card">
+        <div class="section-header">
+          <h3>Summary Stats</h3>
+        </div>
+
+        <div class="progress-stats-grid">
+          <div class="progress-stat-box">
+            <h4 id="totalWorkoutsStat">0</h4>
+            <p>Total Workouts</p>
+          </div>
+
+          <div class="progress-stat-box">
+            <h4 id="avgCaloriesStat">0</h4>
+            <p>Avg Calories / Day</p>
+          </div>
+
+          <div class="progress-stat-box">
+            <h4 id="currentStreakStat">0</h4>
+            <p>Current Streak</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>CaribbeanFit © 2026</p>
+  </footer>
+
+  <script src="../auth.js"></script>
+  <script src="../progress.js"></script>
+</body>
+</html>

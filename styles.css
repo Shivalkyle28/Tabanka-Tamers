@@ -748,3 +748,102 @@ img {
     width: 100%;
   }
 }
+.progress-filter-bar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.progress-filter-btn {
+  padding: 12px 20px;
+  border: 1px solid #2a3441;
+  border-radius: 12px;
+  background: #121923;
+  color: #f5f7fa;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.active-filter {
+  background: #b7ff3c;
+  color: #0b0f14;
+}
+
+.progress-card {
+  background: #121923;
+  border: 1px solid #233041;
+  border-radius: 20px;
+  padding: 24px;
+}
+
+.progress-chart {
+  width: 100%;
+  height: 320px;
+  background: #0b0f14;
+  border: 1px solid #233041;
+  border-radius: 14px;
+  display: block;
+}
+
+.macro-legend {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #dbe2ea;
+}
+
+.legend-box {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  border: 1px solid #2a3441;
+}
+
+.protein-box {
+  background: #7b7f87;
+}
+
+.carbs-box {
+  background: #a8adb8;
+}
+
+.fat-box {
+  background: #d8dbe2;
+}
+
+.progress-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.progress-stat-box {
+  background: #0b0f14;
+  border: 1px solid #233041;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+}
+
+.progress-stat-box h4 {
+  font-size: 2rem;
+  margin-bottom: 8px;
+  color: #b7ff3c;
+}
+
+.progress-stat-box p {
+  color: #9aa4b2;
+}
+
+@media (max-width: 900px) {
+  .progress-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
