@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caribbean Foods & Fitness</title>
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.json" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">CaribbeanFit</div>
+
+    <nav>
+      <a href="#foods">Foods</a>
+      <a href="#exercises">Exercises</a>
+      <a href="pages/workouts.html">Workouts</a>
+      <a href="pages/dashboard.html">Dashboard</a>
+      <a href="pages/favorites.html">Favorites</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button id="loginBtn" class="btn-primary">Login</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-text">
+        <p class="tag">Track smarter. Eat better. Train harder.</p>
+        <h1>Caribbean foods, fitness tracking, and progress in one place.</h1>
+        <p class="subtitle">
+          Explore Caribbean meals, discover exercises, and build your fitness journey with a clean dashboard.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#foods" class="btn-primary">Explore Foods</a>
+          <a href="#exercises" class="btn-secondary">View Exercises</a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <h3>Today’s Preview</h3>
+
+        <div class="preview-item">
+          <span>Calories Goal</span>
+          <strong>2200 kcal</strong>
+        </div>
+
+        <div class="preview-item">
+          <span>Workout Focus</span>
+          <strong>Upper Body</strong>
+        </div>
+
+        <div class="preview-item">
+          <span>Protein Goal</span>
+          <strong>140 g</strong>
+        </div>
+      </div>
+    </section>
+
+    <section id="foods" class="section">
+      <div class="section-header">
+        <h2>Featured Caribbean Foods</h2>
+        <p>Local meals with nutrition details.</p>
+      </div>
+
+      <div id="foodsContainer" class="card-grid"></div>
+    </section>
+
+    <section id="exercises" class="section">
+      <div class="section-header">
+        <h2>Featured Exercises</h2>
+        <p>Exercises loaded from your GitHub-based dataset.</p>
+      </div>
+
+      <div id="exercisesContainer" class="card-grid"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>CaribbeanFit © 2026</p>
+  </footer>
+
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

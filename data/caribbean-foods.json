@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "Pelau",
+    "calories": 520,
+    "protein": 28,
+    "carbs": 48,
+    "fat": 22
+  },
+  {
+    "id": 2,
+    "name": "Callaloo",
+    "calories": 180,
+    "protein": 6,
+    "carbs": 14,
+    "fat": 10
+  },
+  {
+    "id": 3,
+    "name": "Bake and Saltfish",
+    "calories": 430,
+    "protein": 18,
+    "carbs": 38,
+    "fat": 21
+  },
+  {
+    "id": 4,
+    "name": "Curry Chicken and Rice",
+    "calories": 610,
+    "protein": 34,
+    "carbs": 56,
+    "fat": 24
+  },
+  {
+    "id": 5,
+    "name": "Provision and Stew Fish",
+    "calories": 470,
+    "protein": 30,
+    "carbs": 40,
+    "fat": 16
+  },
+  {
+    "id": 6,
+    "name": "Oats Porridge",
+    "calories": 250,
+    "protein": 8,
+    "carbs": 36,
+    "fat": 7
+  }
+]

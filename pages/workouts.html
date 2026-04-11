@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workouts | CaribbeanFit</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">CaribbeanFit</div>
+
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../index.html#foods">Foods</a>
+      <a href="../index.html#exercises">Exercises</a>
+      <a href="workouts.html">Workouts</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="favorites.html">Favorites</a>
+    </nav>
+
+    <div class="nav-actions">
+      <span id="userStatus" class="user-status">Guest</span>
+      <button id="logoutBtn" class="btn-secondary">Logout</button>
+    </div>
+  </header>
+
+  <main class="page-main">
+    <section class="page-hero">
+      <p class="tag">Train smarter</p>
+      <h1>Workout Tracker</h1>
+      <p class="subtitle">
+        Browse exercises, use timers, build a temporary workout, and log in to save your progress.
+      </p>
+    </section>
+
+    <section class="section">
+      <div class="workouts-top-grid">
+        <div class="timer-card">
+          <h2>Workout Timer</h2>
+          <p class="timer-display" id="workoutTimerDisplay">00:00</p>
+
+          <div class="timer-actions">
+            <button id="startWorkoutTimerBtn" class="btn-primary">Start</button>
+            <button id="pauseWorkoutTimerBtn" class="btn-secondary">Pause</button>
+            <button id="resetWorkoutTimerBtn" class="btn-secondary">Reset</button>
+          </div>
+        </div>
+
+        <div class="timer-card">
+          <h2>Rest Timer</h2>
+          <p class="timer-display" id="restTimerDisplay">01:00</p>
+
+          <div class="rest-presets">
+            <button class="btn-secondary restPresetBtn" data-seconds="30">30s</button>
+            <button class="btn-secondary restPresetBtn" data-seconds="60">60s</button>
+            <button class="btn-secondary restPresetBtn" data-seconds="90">90s</button>
+          </div>
+
+          <div class="timer-actions">
+            <button id="startRestTimerBtn" class="btn-primary">Start</button>
+            <button id="pauseRestTimerBtn" class="btn-secondary">Pause</button>
+            <button id="resetRestTimerBtn" class="btn-secondary">Reset</button>
+          </div>
+        </div>
+
+        <div class="body-card">
+          <h2>Target Muscles</h2>
+          <p id="selectedMusclesText" class="muted-text">
+            Select an exercise to view its main muscle groups.
+          </p>
+
+            <div class="body-image-grid">
+            <object id="frontBodySvg" data="../assets/images/body-front.svg" type="image/svg+xml" class="body-image"></object>
+            <object id="backBodySvg" data="../assets/images/body-back.svg" type="image/svg+xml" class="body-image"></object>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>Current Workout</h2>
+        <p>Guests can build a temporary workout. Log in to save it.</p>
+      </div>
+
+      <div id="currentWorkoutContainer" class="current-workout-list"></div>
+
+      <div class="workout-bottom-actions">
+        <button id="saveWorkoutBtn" class="btn-primary">Save Workout</button>
+        <button id="clearWorkoutBtn" class="btn-secondary">Clear Workout</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>Exercise Library</h2>
+        <p>Search, filter, and add exercises to your workout.</p>
+      </div>
+
+      <div class="exercise-search-row">
+        <input
+          type="text"
+          id="exerciseSearchInput"
+          class="search-input"
+          placeholder="Search exercises by name..."
+        />
+
+        <select id="exerciseLevelFilter" class="search-input">
+          <option value="all">All Levels</option>
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="expert">Expert</option>
+        </select>
+
+        <select id="exerciseMuscleFilter" class="search-input">
+          <option value="all">All Muscle Groups</option>
+        </select>
+      </div>
+
+      <div id="workoutExercisesContainer" class="card-grid"></div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>CaribbeanFit © 2026</p>
+  </footer>
+
+  <script src="../auth.js"></script>
+  <script src="../workouts.js"></script>
+</body>
+</html>

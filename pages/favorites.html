@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Favorites | CaribbeanFit</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">CaribbeanFit</div>
+
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../index.html#foods">Foods</a>
+      <a href="../index.html#exercises">Exercises</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="favorites.html">Favorites</a>
+    </nav>
+
+    <div class="nav-actions">
+      <span id="userStatus" class="user-status">Guest</span>
+      <button id="logoutBtn" class="btn-secondary">Logout</button>
+    </div>
+  </header>
+
+  <main class="page-main">
+    <section class="page-hero">
+      <p class="tag">Your saved items</p>
+      <h1>Favorites</h1>
+      <p class="subtitle">
+        Keep track of your favorite Caribbean foods and exercises.
+      </p>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>Favorite Foods</h2>
+        <p>Your saved food items will appear here.</p>
+      </div>
+      <div id="favoriteFoodsContainer" class="card-grid"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>Favorite Exercises</h2>
+        <p>Your saved exercises will appear here.</p>
+      </div>
+      <div id="favoriteExercisesContainer" class="card-grid"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>CaribbeanFit © 2026</p>
+  </footer>
+
+  <script src="../auth.js"></script>
+  <script>
+    const favoriteFoodsContainer = document.getElementById("favoriteFoodsContainer");
+    const favoriteExercisesContainer = document.getElementById("favoriteExercisesContainer");
+    const userStatus = document.getElementById("userStatus");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    function getUserStorageKey(baseKey) {
+      const currentUser = getCurrentUser();
+
+      if (!currentUser) {
+        return null;
+      }
+
+      return `${baseKey}_${currentUser.username}`;
+    }
+
+    function renderFavoriteFoods() {
+      const storageKey = getUserStorageKey("favoriteFoods");
+      const favoriteFoods = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+      if (favoriteFoods.length === 0) {
+        favoriteFoodsContainer.innerHTML = `<p class="empty-state">No favorite foods yet.</p>`;
+        return;
+      }
+
+      favoriteFoodsContainer.innerHTML = "";
+
+      favoriteFoods.forEach(food => {
+        favoriteFoodsContainer.innerHTML += `
+          <div class="card">
+            <h3>${food.name}</h3>
+            <p><strong>Calories:</strong> ${food.calories} kcal</p>
+            <p><strong>Protein:</strong> ${food.protein} g</p>
+            <p><strong>Carbs:</strong> ${food.carbs} g</p>
+            <p><strong>Fat:</strong> ${food.fat} g</p>
+            <button class="btn-secondary remove-btn" onclick="removeFavoriteFood(${food.id})">
+              Remove
+            </button>
+          </div>
+        `;
+      });
+    }
+
+    function renderFavoriteExercises() {
+      const storageKey = getUserStorageKey("favoriteExercises");
+      const favoriteExercises = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+      if (favoriteExercises.length === 0) {
+        favoriteExercisesContainer.innerHTML = `<p class="empty-state">No favorite exercises yet.</p>`;
+        return;
+      }
+
+      favoriteExercisesContainer.innerHTML = "";
+
+      favoriteExercises.forEach(exercise => {
+        favoriteExercisesContainer.innerHTML += `
+          <div class="card">
+            <h3>${exercise.name}</h3>
+            <p><strong>Category:</strong> ${exercise.category}</p>
+            <p><strong>Level:</strong> ${exercise.level}</p>
+            <p><strong>Primary Muscles:</strong> ${exercise.primaryMuscles.join(", ")}</p>
+            <button class="btn-secondary remove-btn" onclick="removeFavoriteExercise('${exercise.name.replace(/'/g, "\\'")}')">
+              Remove
+            </button>
+          </div>
+        `;
+      });
+    }
+
+    function removeFavoriteFood(foodId) {
+      const storageKey = getUserStorageKey("favoriteFoods");
+      let favoriteFoods = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+      favoriteFoods = favoriteFoods.filter(food => food.id !== foodId);
+      localStorage.setItem(storageKey, JSON.stringify(favoriteFoods));
+
+      renderFavoriteFoods();
+    }
+
+    function removeFavoriteExercise(exerciseName) {
+      const storageKey = getUserStorageKey("favoriteExercises");
+      let favoriteExercises = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+      favoriteExercises = favoriteExercises.filter(exercise => exercise.name !== exerciseName);
+      localStorage.setItem(storageKey, JSON.stringify(favoriteExercises));
+
+      renderFavoriteExercises();
+    }
+
+    function updateUserStatus() {
+      const currentUser = getCurrentUser();
+      userStatus.textContent = currentUser ? `Logged in as ${currentUser.username}` : "Guest";
+    }
+
+    logoutBtn.addEventListener("click", function () {
+      logoutUser();
+    });
+
+    protectPage();
+    updateUserStatus();
+    renderFavoriteFoods();
+    renderFavoriteExercises();
+  </script>
+</body>
+</html>

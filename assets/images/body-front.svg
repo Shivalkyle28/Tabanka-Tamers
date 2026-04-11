@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 420">
+  <style>
+    .base { fill: #cfd5e1; stroke: #8b94a7; stroke-width: 2; }
+    .muscle { fill: #2d6cdf; stroke: #1e3a8a; stroke-width: 1.5; transition: fill 0.2s ease; }
+    .inactive { fill: #cfd5e1; stroke: #8b94a7; }
+    .active { fill: #4cc9f0; stroke: #1e3a8a; }
+  </style>
+
+  <!-- head -->
+  <circle cx="110" cy="40" r="28" class="base"/>
+
+  <!-- torso -->
+  <rect x="75" y="70" width="70" height="95" rx="20" class="base"/>
+
+  <!-- chest -->
+  <path id="chest" class="muscle inactive" d="M78 82 Q95 75 110 95 Q125 75 142 82 L142 115 Q125 122 110 110 Q95 122 78 115 Z"/>
+  
+  <!-- shoulders -->
+  <ellipse id="shoulders" class="muscle inactive" cx="70" cy="92" rx="18" ry="16"/>
+  <ellipse id="shoulders2" class="muscle inactive" cx="150" cy="92" rx="18" ry="16"/>
+
+  <!-- biceps -->
+  <ellipse id="biceps" class="muscle inactive" cx="55" cy="128" rx="14" ry="22"/>
+  <ellipse id="biceps2" class="muscle inactive" cx="165" cy="128" rx="14" ry="22"/>
+
+  <!-- forearms -->
+  <ellipse id="forearms" class="muscle inactive" cx="48" cy="175" rx="12" ry="24"/>
+  <ellipse id="forearms2" class="muscle inactive" cx="172" cy="175" rx="12" ry="24"/>
+
+  <!-- abs -->
+  <rect id="abs" class="muscle inactive" x="92" y="116" width="36" height="48" rx="10"/>
+
+  <!-- quads -->
+  <ellipse id="quads" class="muscle inactive" cx="92" cy="235" rx="18" ry="42"/>
+  <ellipse id="quads2" class="muscle inactive" cx="128" cy="235" rx="18" ry="42"/>
+
+  <!-- calves -->
+  <ellipse id="calves" class="muscle inactive" cx="92" cy="330" rx="14" ry="34"/>
+  <ellipse id="calves2" class="muscle inactive" cx="128" cy="330" rx="14" ry="34"/>
+
+  <!-- arms/legs base -->
+  <line x1="65" y1="105" x2="48" y2="210" stroke="#8b94a7" stroke-width="10" stroke-linecap="round"/>
+  <line x1="155" y1="105" x2="172" y2="210" stroke="#8b94a7" stroke-width="10" stroke-linecap="round"/>
+  <line x1="95" y1="165" x2="92" y2="372" stroke="#8b94a7" stroke-width="12" stroke-linecap="round"/>
+  <line x1="125" y1="165" x2="128" y2="372" stroke="#8b94a7" stroke-width="12" stroke-linecap="round"/>
+</svg>
