@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nutrition | CaribbeanFit</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<header class="navbar">
+  <div class="logo">CaribbeanFit</div>
+
+  <nav>
+    <a href="../index.html">Home</a>
+    <a href="nutrition.html">Nutrition</a>
+    <a href="workouts.html">Workouts</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="favorites.html">Favorites</a>
+  </nav>
+
+  <div class="nav-actions">
+    <span id="userStatus" class="user-status">Guest</span>
+    <button id="loginBtn" class="btn-primary">Login</button>
+  </div>
+</header>
+
+<main class="page-main">
+
+  <section class="page-hero">
+    <p class="tag">Fuel smarter</p>
+    <h1>Nutrition & Recipes</h1>
+    <p class="subtitle">
+      Search, filter, and explore Caribbean meals with macro tracking.
+    </p>
+  </section>
+
+  <section class="section">
+    <div class="nutrition-search-card">
+
+      <div class="nutrition-search-row">
+        <input id="searchInput" class="search-input" placeholder="Search recipes..." />
+        <button id="searchBtn" class="btn-primary">Search</button>
+      </div>
+
+      <div class="chip-row">
+        <button class="chip-btn active-chip" data-filter="all">All</button>
+        <button class="chip-btn" data-filter="protein">High Protein</button>
+        <button class="chip-btn" data-filter="lowcarb">Low Carb</button>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div id="nutritionContainer" class="nutrition-grid"></div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  CaribbeanFit © 2026
+</footer>
+
+<script src="../auth.js"></script>
+<script src="../nutrition.js"></script>
+
+</body>
+</html>
