@@ -4,45 +4,33 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tabanka Tamers</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#b7ff3c">
+
+  <!-- Favicon -->
   <link rel="icon" href="assets/images/favicon.ico">
+
+  <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
-  <link rel="manifest" href="manifest.json" />
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
+</div>
 
-<script>
-  function updateNavbar() {
-    const nav = document.getElementById("navActions");
-    const user = localStorage.getItem("user");
-
-    if (user) {
-      nav.innerHTML = `
-        <span class="user-status">Logged in as ${user}</span>
-        <button id="logoutBtn" class="btn-secondary">Logout</button>
-      `;
-
-      document.getElementById("logoutBtn").addEventListener("click", () => {
-        localStorage.removeItem("user");
-        location.reload();
-      });
-
-    } else {
-      nav.innerHTML = `
-        <a href="pages/auth.html" class="btn-primary">Log In</a>
-      `;
-    }
-  }
-
-  updateNavbar();
-</script>
 <body>
+
+  <!-- NAVBAR -->
   <header class="navbar">
     <div class="logo">
-    <img src="assets/images/logo.png" alt="Tabanka Tamers logo" class="logo-img">
-    <span>Tabanka Tamers</span>
-  </div>
+      <img src="assets/images/logo.png" alt="Tabanka Tamers logo" class="logo-img">
+      <span>Tabanka Tamers</span>
+    </div>
+
     <nav>
       <a href="index.html">Home</a>
       <a href="pages/workouts.html">Workouts</a>
@@ -53,14 +41,17 @@
       <a href="pages/profile.html">Profile</a>
     </nav>
 
-<div class="nav-actions" id="navActions">
-</div>
+    <div class="nav-actions" id="navActions"></div>
   </header>
 
+  <!-- MAIN -->
   <main class="landing-main">
+
+    <!-- HERO -->
     <section class="landing-hero-card">
       <p class="tag">Caribbean fitness, nutrition, and progress tracking</p>
       <h1>Train hard. Eat smart. Track everything.</h1>
+
       <p class="landing-subtitle">
         Tabanka Tamers is a Caribbean-inspired fitness platform designed to help users
         manage workouts, explore nutrition, monitor progress, and stay consistent with
@@ -69,9 +60,15 @@
 
       <div class="landing-actions">
         <a href="pages/auth.html" class="btn-primary">Log In</a>
+
+        <!-- INSTALL BUTTON -->
+        <button id="installAppBtn" class="btn-secondary hidden" type="button">
+          Install App
+        </button>
       </div>
     </section>
 
+    <!-- INFO -->
     <section class="landing-info-grid">
       <div class="landing-info-card">
         <p class="tag">Why Tabanka Tamers?</p>
@@ -93,6 +90,7 @@
       </div>
     </section>
 
+    <!-- FEATURES -->
     <section class="landing-features-section">
       <div class="section-header">
         <h2>Main Features</h2>
@@ -103,82 +101,81 @@
         <article class="landing-feature-card">
           <div class="feature-icon">🏋️</div>
           <h3>Workouts</h3>
-          <p>
-            Use workout and rest timers, build a session, track sets, reps, and weight,
-            and save completed workouts for future review.
-          </p>
+          <p>Track sets, reps, and save workouts.</p>
         </article>
 
         <article class="landing-feature-card">
           <div class="feature-icon">🍽️</div>
           <h3>Nutrition</h3>
-          <p>
-            Explore Caribbean meals, search through nutrition entries, and compare macro
-            information to support your fitness goals.
-          </p>
+          <p>Explore Caribbean meals and macros.</p>
         </article>
 
         <article class="landing-feature-card">
           <div class="feature-icon">📈</div>
           <h3>Progress</h3>
-          <p>
-            Visualize workout consistency, bodyweight trends, and summary statistics so
-            users can clearly see how they are improving over time.
-          </p>
+          <p>Monitor trends and improvements over time.</p>
         </article>
 
         <article class="landing-feature-card">
           <div class="feature-icon">🎮</div>
           <h3>Gamification</h3>
-          <p>
-            Make training more engaging with interactive ideas, motivating feedback, and
-            a system that feels rewarding instead of repetitive.
-          </p>
+          <p>Stay motivated with interactive tracking.</p>
         </article>
       </div>
     </section>
 
-    <section class="landing-steps-section">
-      <div class="section-header">
-        <h2>How It Works</h2>
-        <p>A simple flow for new users.</p>
-      </div>
-
-      <div class="landing-steps-grid">
-        <div class="landing-step-card">
-          <span class="step-number">1</span>
-          <h3>Create an account</h3>
-          <p>Sign up and access your personal dashboard, preferences, and saved data.</p>
-        </div>
-
-        <div class="landing-step-card">
-          <span class="step-number">2</span>
-          <h3>Build your plan</h3>
-          <p>Choose exercises, track workouts, and explore foods that fit your goals.</p>
-        </div>
-
-        <div class="landing-step-card">
-          <span class="step-number">3</span>
-          <h3>Measure progress</h3>
-          <p>Use the progress tools to monitor trends, streaks, and long-term improvement.</p>
-        </div>
-      </div>
-    </section>
-
+    <!-- CTA -->
     <section class="landing-cta-card">
       <h2>Start your fitness journey with Tabanka Tamers.</h2>
-      <p>
-        Join the platform, track smarter, and build a healthier routine with a system
-        designed to feel practical, modern, and motivating.
-      </p>
+      <p>Track smarter and stay consistent.</p>
+
       <div class="landing-actions">
         <a href="pages/auth.html" class="btn-primary">Sign Up</a>
+      <div class="install-bar">
+  <button id="installAppBtn" class="btn-primary install-btn">
+    Install Tabanka Tamers
+  </button>
       </div>
+
     </section>
+
   </main>
 
+  <!-- FOOTER -->
   <footer class="footer">
     <p>Tabanka Tamers © 2026</p>
   </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+    function updateNavbar() {
+      const nav = document.getElementById("navActions");
+      const user = localStorage.getItem("user");
+
+      if (user) {
+        nav.innerHTML = `
+          <span class="user-status">Logged in as ${user}</span>
+          <button id="logoutBtn" class="btn-secondary">Logout</button>
+        `;
+
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+          localStorage.removeItem("user");
+          location.reload();
+        });
+
+      } else {
+        nav.innerHTML = `
+          <a href="pages/auth.html" class="btn-primary">Log In</a>
+        `;
+      }
+    }
+
+    updateNavbar();
+  </script>
+
+  <!-- INSTALL SCRIPT -->
+  <script src="app.js"></script>
+  <script src="auth.js"></script>
+
 </body>
 </html>

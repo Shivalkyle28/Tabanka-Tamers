@@ -152,7 +152,34 @@ function addFavoriteExercise(exerciseName) {
 
   alert(`${selectedExercise.name} added to favorites.`);
 }
+let deferredPrompt = null;
 
+const installBtn = document.getElementById("installAppBtn");
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+});
+
+installBtn.addEventListener("click", async () => {
+  if (!deferredPrompt) {
+    alert("Install not available yet. Try using Chrome or refreshing the page.");
+    return;
+  }
+
+  deferredPrompt.prompt();
+  const choice = await deferredPrompt.userChoice;
+
+  if (choice.outcome === "accepted") {
+    console.log("App installed");
+  }
+
+  deferredPrompt = null;
+});
+
+window.addEventListener("appinstalled", () => {
+  console.log("Installed successfully");
+});
 /* Start loading data when page opens */
 loadFoods();
 loadExercises();

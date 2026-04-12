@@ -1257,3 +1257,110 @@ img {
   object-fit: cover;
   display: block;
 }
+/* INSTALL BAR */
+.install-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #121923;
+  border-top: 1px solid #233041;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.install-btn {
+  width: 100%;
+  max-width: 400px;
+}
+.landing-main {
+  padding-bottom: 80px; /* space for install bar */
+}
+/* =========================
+   LIGHT MODE
+========================= */
+body.light-mode {
+  background: #f3f6fb;
+  color: #16202b;
+}
+
+body.light-mode .navbar {
+  background: rgba(243, 246, 251, 0.95);
+  border-bottom: 1px solid #d7dee8;
+}
+
+body.light-mode .navbar nav a,
+body.light-mode .user-status,
+body.light-mode .subtitle,
+body.light-mode .muted-text,
+body.light-mode .section-header p,
+body.light-mode .card p,
+body.light-mode .progress-stat-box p,
+body.light-mode .recipe-tags,
+body.light-mode .landing-info-card p,
+body.light-mode .landing-feature-card p,
+body.light-mode .landing-step-card p,
+body.light-mode .landing-cta-card p {
+  color: #4c5b6b;
+}
+
+body.light-mode .card,
+body.light-mode .stat-card,
+body.light-mode .summary-card,
+body.light-mode .timer-card,
+body.light-mode .body-card,
+body.light-mode .saved-workout-card,
+body.light-mode .workout-item-card,
+body.light-mode .auth-card,
+body.light-mode .profile-section-card,
+body.light-mode .progress-card,
+body.light-mode .nutrition-search-card,
+body.light-mode .landing-hero-card,
+body.light-mode .landing-info-card,
+body.light-mode .landing-feature-card,
+body.light-mode .landing-step-card,
+body.light-mode .landing-cta-card,
+body.light-mode .recipe-card,
+body.light-mode .recipe-modal-content {
+  background: #ffffff;
+  border: 1px solid #d7dee8;
+}
+
+body.light-mode .search-input,
+body.light-mode .workout-input-grid input,
+body.light-mode .auth-form input,
+body.light-mode .preference-item,
+body.light-mode .progress-chart,
+body.light-mode .recipe-detail-stat,
+body.light-mode .recipe-image-placeholder,
+body.light-mode .recipe-detail-image,
+body.light-mode .progress-stat-box,
+body.light-mode .avatar-circle,
+body.light-mode .tab-btn,
+body.light-mode .chip-btn,
+body.light-mode .pagination-btn,
+body.light-mode .btn-secondary,
+body.light-mode .filter-dropdown {
+  background: #f8fafc;
+  color: #16202b;
+  border-color: #d7dee8;
+}
+
+body.light-mode .footer {
+  border-top: 1px solid #d7dee8;
+  color: #4c5b6b;
+}
+
+body.light-mode .logo {
+  color: #7aa800;
+}
+
+body.light-mode .btn-primary,
+body.light-mode .active-tab,
+body.light-mode .active-chip,
+body.light-mode .active-filter,
+body.light-mode .active-page {
+  color: #16202b;
+}

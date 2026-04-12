@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Profile | Tabanka Tamers</title>
-  <link rel="icon" href="../assets/images/favicon.ico">
+  <link rel="icon" href="../assets/images/favicon.ico" />
   <link rel="stylesheet" href="../styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,8 +13,8 @@
 <body>
   <header class="navbar">
     <div class="logo">
-    <img src="../assets/images/logo.png" alt="Tabanka Tamers logo" class="logo-img">
-    <span>Tabanka Tamers</span>
+      <img src="../assets/images/logo.png" alt="Tabanka Tamers logo" class="logo-img">
+      <span>Tabanka Tamers</span>
     </div>
 
     <nav>
@@ -103,21 +103,10 @@
       <div class="profile-section-card">
         <div class="section-header">
           <h2>Preferences</h2>
-          <p>Control units, notifications, and theme preferences.</p>
+          <p>Control notifications and theme preferences.</p>
         </div>
 
         <div class="preference-list">
-          <div class="preference-item">
-            <div>
-              <h3>Units</h3>
-              <p class="muted-text">Use kilograms instead of pounds.</p>
-            </div>
-            <label class="switch">
-              <input type="checkbox" id="unitsToggle" />
-              <span class="slider"></span>
-            </label>
-          </div>
-
           <div class="preference-item">
             <div>
               <h3>Push Notifications</h3>
@@ -137,7 +126,6 @@
             <select id="themePreference" class="search-input preference-select">
               <option value="dark">Dark</option>
               <option value="light">Light</option>
-              <option value="auto">Auto</option>
             </select>
           </div>
         </div>
@@ -148,10 +136,11 @@
       <div class="profile-section-card">
         <div class="section-header">
           <h2>Account</h2>
-          <p>Manage your account and stored data.</p>
+          <p>Manage your account, app install, and stored data.</p>
         </div>
 
         <div class="account-actions">
+          <button id="installAppBtn" class="btn-secondary account-btn" type="button">Install App</button>
           <button id="changePasswordBtn" class="btn-secondary account-btn" type="button">Change Password</button>
           <button id="exportDataBtn" class="btn-secondary account-btn" type="button">Export My Data</button>
           <button id="deleteAccountBtn" class="btn-secondary account-btn danger-btn" type="button">Delete Account</button>

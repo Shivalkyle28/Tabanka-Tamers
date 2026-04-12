@@ -228,6 +228,26 @@ function setupAuthPage() {
     }
   });
 }
+function getCurrentUser() {
+  return JSON.parse(localStorage.getItem("currentUser"));
+}
+
+function applySavedTheme() {
+  const user = getCurrentUser();
+
+  document.body.classList.remove("light-mode");
+
+  if (!user) return;
+
+  const preferencesKey = `preferences_${user.username}`;
+  const preferences = JSON.parse(localStorage.getItem(preferencesKey)) || {};
+
+  if (preferences.theme === "light") {
+    document.body.classList.add("light-mode");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", applySavedTheme);
 
 document.addEventListener("DOMContentLoaded", function () {
   updateAuthButton();
