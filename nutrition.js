@@ -13,6 +13,18 @@ const userStatus = document.getElementById("userStatus");
 const loginBtn = document.getElementById("loginBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 
+const categoryFilter = document.getElementById("categoryFilter");
+const maxCaloriesFilter = document.getElementById("maxCaloriesFilter");
+const minProteinFilter = document.getElementById("minProteinFilter");
+const maxCarbsFilter = document.getElementById("maxCarbsFilter");
+const maxFatFilter = document.getElementById("maxFatFilter");
+const minFiberFilter = document.getElementById("minFiberFilter");
+const maxSugarFilter = document.getElementById("maxSugarFilter");
+const maxSodiumFilter = document.getElementById("maxSodiumFilter");
+
+const toggleBtn = document.getElementById("toggleFiltersBtn");
+const dropdown = document.getElementById("filterDropdown");
+
 let allRecipes = [];
 let filteredRecipes = [];
 let currentPage = 1;
@@ -70,15 +82,30 @@ function updateUserStatus() {
   }
 }
 
+if (toggleBtn && dropdown) {
+  toggleBtn.addEventListener("click", function () {
+    dropdown.classList.toggle("hidden");
+    toggleBtn.textContent = dropdown.classList.contains("hidden")
+      ? "Advanced Filters ▼"
+      : "Advanced Filters ▲";
+  });
+}
+
 async function loadRecipes() {
   try {
     const response = await fetch("../data/caribbean-foods.json");
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
     const data = await response.json();
 
     allRecipes = data.map(item => ({
       ...item,
-      category: item.category || "Caribbean",
-      tags: Array.isArray(item.tags) ? item.tags : buildTags(item)
+      category: item.category || "Other",
+      tags: Array.isArray(item.tags) ? item.tags : buildTags(item),
+      image: item.image || "../assets/foods/placeholder.jpg"
     }));
 
     filteredRecipes = [...allRecipes];
@@ -163,7 +190,10 @@ function addFoodToToday(recipeId) {
     calories: Number(selectedRecipe.calories || 0),
     protein_g: Number(selectedRecipe.protein_g || 0),
     carbs_g: Number(selectedRecipe.carbs_g || 0),
-    fat_g: Number(selectedRecipe.fat_g || 0)
+    fat_g: Number(selectedRecipe.fat_g || 0),
+    fiber_g: Number(selectedRecipe.fiber_g || 0),
+    sugar_g: Number(selectedRecipe.sugar_g || 0),
+    sodium_mg: Number(selectedRecipe.sodium_mg || 0)
   });
 
   localStorage.setItem(storageKey, JSON.stringify(dailyLog));
@@ -173,6 +203,35 @@ function addFoodToToday(recipeId) {
 
 function applyFilters() {
   const searchValue = recipeSearchInput.value.trim().toLowerCase();
+  const selectedCategory = categoryFilter ? categoryFilter.value : "all";
+
+  const maxCalories = maxCaloriesFilter && maxCaloriesFilter.value !== ""
+    ? Number(maxCaloriesFilter.value)
+    : Infinity;
+
+  const minProtein = minProteinFilter && minProteinFilter.value !== ""
+    ? Number(minProteinFilter.value)
+    : 0;
+
+  const maxCarbs = maxCarbsFilter && maxCarbsFilter.value !== ""
+    ? Number(maxCarbsFilter.value)
+    : Infinity;
+
+  const maxFat = maxFatFilter && maxFatFilter.value !== ""
+    ? Number(maxFatFilter.value)
+    : Infinity;
+
+  const minFiber = minFiberFilter && minFiberFilter.value !== ""
+    ? Number(minFiberFilter.value)
+    : 0;
+
+  const maxSugar = maxSugarFilter && maxSugarFilter.value !== ""
+    ? Number(maxSugarFilter.value)
+    : Infinity;
+
+  const maxSodium = maxSodiumFilter && maxSodiumFilter.value !== ""
+    ? Number(maxSodiumFilter.value)
+    : Infinity;
 
   filteredRecipes = allRecipes.filter(recipe => {
     const ingredientText = Array.isArray(recipe.ingredients)
@@ -181,10 +240,22 @@ function applyFilters() {
 
     const matchesSearch =
       recipe.name.toLowerCase().includes(searchValue) ||
-      (recipe.category || "").toLowerCase().includes(searchValue) ||
-      (recipe.description || "").toLowerCase().includes(searchValue) ||
+      String(recipe.category || "").toLowerCase().includes(searchValue) ||
+      String(recipe.description || "").toLowerCase().includes(searchValue) ||
       ingredientText.includes(searchValue) ||
       (recipe.tags || []).some(tag => tag.toLowerCase().includes(searchValue));
+
+    const matchesCategory =
+      selectedCategory === "all" || recipe.category === selectedCategory;
+
+    const matchesNutrition =
+      Number(recipe.calories || 0) <= maxCalories &&
+      Number(recipe.protein_g || 0) >= minProtein &&
+      Number(recipe.carbs_g || 0) <= maxCarbs &&
+      Number(recipe.fat_g || 0) <= maxFat &&
+      Number(recipe.fiber_g || 0) >= minFiber &&
+      Number(recipe.sugar_g || 0) <= maxSugar &&
+      Number(recipe.sodium_mg || 0) <= maxSodium;
 
     let matchesChip = true;
 
@@ -194,7 +265,7 @@ function applyFilters() {
       matchesChip = Number(recipe.carbs_g || 0) <= 25;
     }
 
-    return matchesSearch && matchesChip;
+    return matchesSearch && matchesCategory && matchesNutrition && matchesChip;
   });
 
   currentPage = 1;
@@ -215,9 +286,16 @@ function renderRecipes() {
   const recipesToShow = filteredRecipes.slice(start, end);
 
   recipesToShow.forEach(recipe => {
+    const imagePath = recipe.image || "../assets/foods/placeholder.jpg";
+
     nutritionCardsContainer.innerHTML += `
       <div class="recipe-card" onclick="openRecipeModal(${recipe.id})">
-        <div class="recipe-image-placeholder"></div>
+        <img
+          src="${imagePath}"
+          alt="${recipe.name}"
+          class="recipe-image"
+          onerror="this.src='../assets/foods/placeholder.jpg'"
+        />
 
         <div class="recipe-card-body">
           <h3>${recipe.name}</h3>
@@ -265,6 +343,8 @@ function openRecipeModal(recipeId) {
   const ingredientsHtml = Array.isArray(recipe.ingredients)
     ? `<ul class="recipe-ingredients-list">${recipe.ingredients.map(item => `<li>${item}</li>`).join("")}</ul>`
     : `<p class="muted-text">No ingredients listed.</p>`;
+
+  const imagePath = recipe.image || "../assets/foods/placeholder.jpg";
 
   const statsSection = currentUser
     ? `
@@ -317,7 +397,12 @@ function openRecipeModal(recipeId) {
     `;
 
   recipeModalBody.innerHTML = `
-    <div class="recipe-detail-image"></div>
+    <img
+      src="${imagePath}"
+      alt="${recipe.name}"
+      class="recipe-detail-image"
+      onerror="this.src='../assets/foods/placeholder.jpg'"
+    />
     <h2>${recipe.name}</h2>
     <p class="muted-text">${recipe.tags.join(" • ")}</p>
     <p class="muted-text">${recipe.description || ""}</p>
@@ -350,6 +435,22 @@ chipButtons.forEach(button => {
     activeFilter = this.dataset.filter;
     applyFilters();
   });
+});
+
+[
+  categoryFilter,
+  maxCaloriesFilter,
+  minProteinFilter,
+  maxCarbsFilter,
+  maxFatFilter,
+  minFiberFilter,
+  maxSugarFilter,
+  maxSodiumFilter
+].forEach(input => {
+  if (input) {
+    input.addEventListener("input", applyFilters);
+    input.addEventListener("change", applyFilters);
+  }
 });
 
 if (closeRecipeModal) {

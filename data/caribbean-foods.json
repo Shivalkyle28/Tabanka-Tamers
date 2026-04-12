@@ -12,22 +12,9 @@
     "fiber_g": 6,
     "sugar_g": 5,
     "sodium_mg": 760,
-    "tags": [
-      "Caribbean",
-      "Trinidadian",
-      "Dinner",
-      "High Protein"
-    ],
-    "ingredients": [
-      "chicken",
-      "rice",
-      "pigeon peas",
-      "coconut milk",
-      "caramelized sugar",
-      "carrots",
-      "seasoning peppers",
-      "thyme"
-    ]
+    "tags": ["Caribbean", "Trinidadian", "Dinner", "High Protein"],
+    "ingredients": ["chicken", "rice", "pigeon peas", "coconut milk", "caramelized sugar", "carrots", "seasoning peppers", "thyme"],
+    "image": "../assets/foods/pelau.jpg"
   },
   {
     "id": 2,
@@ -42,27 +29,15 @@
     "fiber_g": 7,
     "sugar_g": 5,
     "sodium_mg": 520,
-    "tags": [
-      "Caribbean",
-      "Trinidadian",
-      "Vegetarian",
-      "Low Carb"
-    ],
-    "ingredients": [
-      "dasheen bush",
-      "okra",
-      "pumpkin",
-      "coconut milk",
-      "garlic",
-      "onion",
-      "thyme"
-    ]
+    "tags": ["Caribbean", "Trinidadian", "Vegetarian", "Low Carb"],
+    "ingredients": ["dasheen bush", "okra", "pumpkin", "coconut milk", "garlic", "onion", "thyme"],
+    "image": "../assets/foods/callaloo.jpg"
   },
   {
     "id": 3,
     "name": "Bake and Saltfish",
     "category": "Breakfast",
-    "description": "Fried bake stuffed with saut\u00e9ed saltfish, tomatoes, onions, and peppers.",
+    "description": "Fried bake stuffed with sautéed saltfish, tomatoes, onions, and peppers.",
     "serving_size": "1 filled bake (about 260 g)",
     "calories": 470,
     "protein_g": 20,
@@ -71,21 +46,9 @@
     "fiber_g": 3,
     "sugar_g": 3,
     "sodium_mg": 980,
-    "tags": [
-      "Caribbean",
-      "Trinidadian",
-      "Breakfast",
-      "High Protein"
-    ],
-    "ingredients": [
-      "saltfish",
-      "flour",
-      "baking powder",
-      "tomato",
-      "onion",
-      "sweet pepper",
-      "oil"
-    ]
+    "tags": ["Caribbean", "Trinidadian", "Breakfast", "High Protein"],
+    "ingredients": ["saltfish", "flour", "baking powder", "tomato", "onion", "sweet pepper", "oil"],
+    "image": "../assets/foods/bake-and-saltfish.jpg"
   },
   {
     "id": 4,
@@ -100,21 +63,9 @@
     "fiber_g": 3,
     "sugar_g": 4,
     "sodium_mg": 810,
-    "tags": [
-      "Caribbean",
-      "Lunch",
-      "Dinner",
-      "High Protein"
-    ],
-    "ingredients": [
-      "chicken",
-      "curry powder",
-      "rice",
-      "garlic",
-      "onion",
-      "potato",
-      "thyme"
-    ]
+    "tags": ["Caribbean", "Lunch", "Dinner", "High Protein"],
+    "ingredients": ["chicken", "curry powder", "rice", "garlic", "onion", "potato", "thyme"],
+    "image": "../assets/foods/curry-chicken-and-rice.jpg"
   },
   {
     "id": 5,
@@ -129,21 +80,9 @@
     "fiber_g": 6,
     "sugar_g": 5,
     "sodium_mg": 700,
-    "tags": [
-      "Caribbean",
-      "Dinner",
-      "High Protein"
-    ],
-    "ingredients": [
-      "fish",
-      "yam",
-      "cassava",
-      "sweet potato",
-      "tomato",
-      "onion",
-      "garlic",
-      "thyme"
-    ]
+    "tags": ["Caribbean", "Dinner", "High Protein"],
+    "ingredients": ["fish", "yam", "cassava", "sweet potato", "tomato", "onion", "garlic", "thyme"],
+    "image": "../assets/foods/provision-and-stew-fish.jpg"
   },
   {
     "id": 6,
@@ -158,18 +97,9 @@
     "fiber_g": 5,
     "sugar_g": 10,
     "sodium_mg": 180,
-    "tags": [
-      "Breakfast",
-      "Vegetarian"
-    ],
-    "ingredients": [
-      "oats",
-      "milk",
-      "cinnamon",
-      "nutmeg",
-      "vanilla",
-      "brown sugar"
-    ]
+    "tags": ["Breakfast", "Vegetarian"],
+    "ingredients": ["oats", "milk", "cinnamon", "nutmeg", "vanilla", "brown sugar"],
+    "image": "../assets/foods/oats-porridge.jpg"
   },
   {
     "id": 7,
@@ -184,20 +114,9 @@
     "fiber_g": 8,
     "sugar_g": 8,
     "sodium_mg": 760,
-    "tags": [
-      "Caribbean",
-      "Trinidadian",
-      "Street Food",
-      "Vegan"
-    ],
-    "ingredients": [
-      "chickpeas",
-      "flour",
-      "turmeric",
-      "cumin",
-      "tamarind sauce",
-      "pepper sauce"
-    ]
+    "tags": ["Caribbean", "Trinidadian", "Street Food", "Vegan"],
+    "ingredients": ["chickpeas", "flour", "turmeric", "cumin", "tamarind sauce", "pepper sauce"],
+    "image": "../assets/foods/doubles.jpg"
   },
   {
     "id": 8,
@@ -212,20 +131,9 @@
     "fiber_g": 4,
     "sugar_g": 2,
     "sodium_mg": 420,
-    "tags": [
-      "Caribbean",
-      "Trinidadian",
-      "Street Food",
-      "Vegetarian"
-    ],
-    "ingredients": [
-      "potato",
-      "flour",
-      "turmeric",
-      "cumin",
-      "garlic",
-      "oil"
-    ]
+    "tags": ["Caribbean", "Trinidadian", "Street Food", "Vegetarian"],
+    "ingredients": ["potato", "flour", "turmeric", "cumin", "garlic", "oil"],
+    "image": "../assets/foods/aloo-pie.jpg"
   },
   {
     "id": 9,
@@ -240,19 +148,9 @@
     "fiber_g": 5,
     "sugar_g": 2,
     "sodium_mg": 380,
-    "tags": [
-      "Caribbean",
-      "Snack",
-      "Vegetarian"
-    ],
-    "ingredients": [
-      "split peas",
-      "flour",
-      "turmeric",
-      "garlic",
-      "scallion",
-      "oil"
-    ]
+    "tags": ["Caribbean", "Snack", "Vegetarian"],
+    "ingredients": ["split peas", "flour", "turmeric", "garlic", "scallion", "oil"],
+    "image": "../assets/foods/pholourie.jpg"
   },
   {
     "id": 10,
@@ -267,20 +165,9 @@
     "fiber_g": 6,
     "sugar_g": 7,
     "sodium_mg": 680,
-    "tags": [
-      "Caribbean",
-      "Soup",
-      "Vegetarian"
-    ],
-    "ingredients": [
-      "corn",
-      "split peas",
-      "dumplings",
-      "carrot",
-      "pumpkin",
-      "culantro",
-      "thyme"
-    ]
+    "tags": ["Caribbean", "Soup", "Vegetarian"],
+    "ingredients": ["corn", "split peas", "dumplings", "carrot", "pumpkin", "culantro", "thyme"],
+    "image": "../assets/foods/corn-soup.jpg"
   },
   {
     "id": 11,
@@ -295,21 +182,9 @@
     "fiber_g": 2,
     "sugar_g": 6,
     "sodium_mg": 740,
-    "tags": [
-      "Caribbean",
-      "Dinner",
-      "High Protein",
-      "Low Carb"
-    ],
-    "ingredients": [
-      "chicken",
-      "brown sugar",
-      "onion",
-      "garlic",
-      "sweet pepper",
-      "tomato paste",
-      "thyme"
-    ]
+    "tags": ["Caribbean", "Dinner", "High Protein", "Low Carb"],
+    "ingredients": ["chicken", "brown sugar", "onion", "garlic", "sweet pepper", "tomato paste", "thyme"],
+    "image": "../assets/foods/stewed-chicken.jpg"
   },
   {
     "id": 12,
@@ -324,20 +199,9 @@
     "fiber_g": 2,
     "sugar_g": 4,
     "sodium_mg": 720,
-    "tags": [
-      "Caribbean",
-      "Bajan",
-      "Vegetarian"
-    ],
-    "ingredients": [
-      "macaroni",
-      "cheese",
-      "milk",
-      "egg",
-      "mustard",
-      "seasoning",
-      "butter"
-    ]
+    "tags": ["Caribbean", "Bajan", "Vegetarian"],
+    "ingredients": ["macaroni", "cheese", "milk", "egg", "mustard", "seasoning", "butter"],
+    "image": "../assets/foods/macaroni-pie.jpg"
   },
   {
     "id": 13,
@@ -352,21 +216,9 @@
     "fiber_g": 2,
     "sugar_g": 4,
     "sodium_mg": 1100,
-    "tags": [
-      "Caribbean",
-      "Breakfast",
-      "High Protein",
-      "Low Carb"
-    ],
-    "ingredients": [
-      "saltfish",
-      "tomato",
-      "onion",
-      "cucumber",
-      "sweet pepper",
-      "olive oil",
-      "lime"
-    ]
+    "tags": ["Caribbean", "Breakfast", "High Protein", "Low Carb"],
+    "ingredients": ["saltfish", "tomato", "onion", "cucumber", "sweet pepper", "olive oil", "lime"],
+    "image": "../assets/foods/saltfish-buljol.jpg"
   },
   {
     "id": 14,
@@ -381,19 +233,9 @@
     "fiber_g": 5,
     "sugar_g": 5,
     "sodium_mg": 410,
-    "tags": [
-      "Caribbean",
-      "Breakfast",
-      "Vegan"
-    ],
-    "ingredients": [
-      "flour",
-      "water",
-      "tomato",
-      "garlic",
-      "pepper",
-      "onion"
-    ]
+    "tags": ["Caribbean", "Breakfast", "Vegan"],
+    "ingredients": ["flour", "water", "tomato", "garlic", "pepper", "onion"],
+    "image": "../assets/foods/sada-roti-and-tomato-choka.jpg"
   },
   {
     "id": 15,
@@ -408,19 +250,9 @@
     "fiber_g": 5,
     "sugar_g": 5,
     "sodium_mg": 180,
-    "tags": [
-      "Caribbean",
-      "Vegan",
-      "Low Carb"
-    ],
-    "ingredients": [
-      "eggplant",
-      "garlic",
-      "onion",
-      "olive oil",
-      "pepper",
-      "culantro"
-    ]
+    "tags": ["Caribbean", "Vegan", "Low Carb"],
+    "ingredients": ["eggplant", "garlic", "onion", "olive oil", "pepper", "culantro"],
+    "image": "../assets/foods/placeholder.jpg"
   },
   {
     "id": 16,
@@ -435,19 +267,9 @@
     "fiber_g": 4,
     "sugar_g": 8,
     "sodium_mg": 250,
-    "tags": [
-      "Caribbean",
-      "Vegan",
-      "Side"
-    ],
-    "ingredients": [
-      "pumpkin",
-      "garlic",
-      "cumin",
-      "turmeric",
-      "onion",
-      "oil"
-    ]
+    "tags": ["Caribbean", "Vegan", "Side"],
+    "ingredients": ["pumpkin", "garlic", "cumin", "turmeric", "onion", "oil"],
+    "image": "../assets/foods/placeholder.jpg"
   },
   {
     "id": 17,
@@ -462,21 +284,9 @@
     "fiber_g": 2,
     "sugar_g": 3,
     "sodium_mg": 760,
-    "tags": [
-      "Caribbean",
-      "Dinner",
-      "High Protein",
-      "Low Carb"
-    ],
-    "ingredients": [
-      "goat",
-      "curry powder",
-      "garlic",
-      "onion",
-      "potato",
-      "thyme",
-      "scallion"
-    ]
+    "tags": ["Caribbean", "Dinner", "High Protein", "Low Carb"],
+    "ingredients": ["goat", "curry powder", "garlic", "onion", "potato", "thyme", "scallion"],
+    "image": "../assets/foods/placeholder.jpg"
   },
   {
     "id": 18,
@@ -491,21 +301,9 @@
     "fiber_g": 2,
     "sugar_g": 5,
     "sodium_mg": 620,
-    "tags": [
-      "Caribbean",
-      "Dinner",
-      "High Protein",
-      "Low Carb"
-    ],
-    "ingredients": [
-      "fish",
-      "onion",
-      "garlic",
-      "tomato",
-      "sweet pepper",
-      "brown sugar",
-      "thyme"
-    ]
+    "tags": ["Caribbean", "Dinner", "High Protein", "Low Carb"],
+    "ingredients": ["fish", "onion", "garlic", "tomato", "sweet pepper", "brown sugar", "thyme"],
+    "image": "../assets/foods/placeholder.jpg"
   },
   {
     "id": 19,
@@ -520,20 +318,9 @@
     "fiber_g": 3,
     "sugar_g": 3,
     "sodium_mg": 880,
-    "tags": [
-      "Caribbean",
-      "Tobagonian",
-      "High Protein"
-    ],
-    "ingredients": [
-      "crab",
-      "flour dumplings",
-      "garlic",
-      "onion",
-      "curry",
-      "thyme",
-      "pepper"
-    ]
+    "tags": ["Caribbean", "Tobagonian", "High Protein"],
+    "ingredients": ["crab", "flour dumplings", "garlic", "onion", "curry", "thyme", "pepper"],
+    "image": "../assets/foods/crab-and-dumpling.jpg"
   },
   {
     "id": 20,
@@ -548,20 +335,9 @@
     "fiber_g": 5,
     "sugar_g": 4,
     "sodium_mg": 760,
-    "tags": [
-      "Caribbean",
-      "Soup",
-      "High Protein"
-    ],
-    "ingredients": [
-      "cow heel",
-      "split peas",
-      "yam",
-      "carrot",
-      "pumpkin",
-      "dumplings",
-      "herbs"
-    ]
+    "tags": ["Caribbean", "Soup", "High Protein"],
+    "ingredients": ["cow heel", "split peas", "yam", "carrot", "pumpkin", "dumplings", "herbs"],
+    "image": "../assets/foods/cow-heel-soup.jpg"
   },
   {
     "id": 21,
@@ -576,19 +352,9 @@
     "fiber_g": 8,
     "sugar_g": 5,
     "sodium_mg": 620,
-    "tags": [
-      "Caribbean",
-      "Soup",
-      "Vegetarian"
-    ],
-    "ingredients": [
-      "split peas",
-      "carrot",
-      "pumpkin",
-      "dumplings",
-      "garlic",
-      "thyme"
-    ]
+    "tags": ["Caribbean", "Soup", "Vegetarian"],
+    "ingredients": ["split peas", "carrot", "pumpkin", "dumplings", "garlic", "thyme"],
+    "image": "../assets/foods/placeholder.jpg"
   },
   {
     "id": 22,
@@ -603,19 +369,9 @@
     "fiber_g": 3,
     "sugar_g": 24,
     "sodium_mg": 95,
-    "tags": [
-      "Caribbean",
-      "Dessert",
-      "Vegetarian"
-    ],
-    "ingredients": [
-      "cassava",
-      "coconut",
-      "brown sugar",
-      "spices",
-      "butter",
-      "milk"
-    ]
+    "tags": ["Caribbean", "Dessert", "Vegetarian"],
+    "ingredients": ["cassava", "coconut", "brown sugar", "spices", "butter", "milk"],
+    "image": "../assets/foods/cassava-pone.jpg"
   },
   {
     "id": 23,
@@ -630,19 +386,9 @@
     "fiber_g": 2,
     "sugar_g": 34,
     "sodium_mg": 170,
-    "tags": [
-      "Caribbean",
-      "Dessert"
-    ],
-    "ingredients": [
-      "dried fruits",
-      "flour",
-      "sugar",
-      "butter",
-      "eggs",
-      "browning",
-      "spices"
-    ]
+    "tags": ["Caribbean", "Dessert"],
+    "ingredients": ["dried fruits", "flour", "sugar", "butter", "eggs", "browning", "spices"],
+    "image": "../assets/foods/black-cake.jpg"
   },
   {
     "id": 24,
@@ -657,19 +403,9 @@
     "fiber_g": 2,
     "sugar_g": 5,
     "sodium_mg": 260,
-    "tags": [
-      "Caribbean",
-      "Breakfast",
-      "Vegetarian"
-    ],
-    "ingredients": [
-      "flour",
-      "coconut",
-      "butter",
-      "milk",
-      "baking powder",
-      "sugar"
-    ]
+    "tags": ["Caribbean", "Breakfast", "Vegetarian"],
+    "ingredients": ["flour", "coconut", "butter", "milk", "baking powder", "sugar"],
+    "image": "../assets/foods/coconut-bake.jpg"
   },
   {
     "id": 25,
@@ -684,15 +420,9 @@
     "fiber_g": 3,
     "sugar_g": 17,
     "sodium_mg": 12,
-    "tags": [
-      "Caribbean",
-      "Side",
-      "Vegan"
-    ],
-    "ingredients": [
-      "ripe plantain",
-      "oil"
-    ]
+    "tags": ["Caribbean", "Side", "Vegan"],
+    "ingredients": ["ripe plantain", "oil"],
+    "image": "../assets/foods/fried-plantain.jpg"
   },
   {
     "id": 26,
@@ -707,20 +437,9 @@
     "fiber_g": 1,
     "sugar_g": 1,
     "sodium_mg": 640,
-    "tags": [
-      "Caribbean",
-      "Dinner",
-      "High Protein",
-      "Low Carb"
-    ],
-    "ingredients": [
-      "pork",
-      "cumin",
-      "garlic",
-      "pepper",
-      "green seasoning",
-      "lime"
-    ]
+    "tags": ["Caribbean", "Dinner", "High Protein", "Low Carb"],
+    "ingredients": ["pork", "cumin", "garlic", "pepper", "green seasoning", "lime"],
+    "image": "../assets/foods/geera-pork.jpg"
   },
   {
     "id": 27,
@@ -735,20 +454,9 @@
     "fiber_g": 2,
     "sugar_g": 5,
     "sodium_mg": 700,
-    "tags": [
-      "Caribbean",
-      "Guyanese",
-      "High Protein",
-      "Low Carb"
-    ],
-    "ingredients": [
-      "beef",
-      "cassareep",
-      "cinnamon",
-      "cloves",
-      "thyme",
-      "garlic"
-    ]
+    "tags": ["Caribbean", "Guyanese", "High Protein", "Low Carb"],
+    "ingredients": ["beef", "cassareep", "cinnamon", "cloves", "thyme", "garlic"],
+    "image": "../assets/foods/pepper-pot.jpg"
   },
   {
     "id": 28,
@@ -763,19 +471,9 @@
     "fiber_g": 10,
     "sugar_g": 5,
     "sodium_mg": 690,
-    "tags": [
-      "Caribbean",
-      "Vegetarian",
-      "Lunch"
-    ],
-    "ingredients": [
-      "roti",
-      "chickpeas",
-      "curry powder",
-      "garlic",
-      "onion",
-      "cumin"
-    ]
+    "tags": ["Caribbean", "Vegetarian", "Lunch"],
+    "ingredients": ["roti", "chickpeas", "curry powder", "garlic", "onion", "cumin"],
+    "image": "../assets/foods/placeholder.jpg"
   },
   {
     "id": 29,
@@ -790,20 +488,9 @@
     "fiber_g": 4,
     "sugar_g": 4,
     "sodium_mg": 610,
-    "tags": [
-      "Caribbean",
-      "Soup",
-      "High Protein"
-    ],
-    "ingredients": [
-      "fish",
-      "yam",
-      "green banana",
-      "dumplings",
-      "garlic",
-      "thyme",
-      "culantro"
-    ]
+    "tags": ["Caribbean", "Soup", "High Protein"],
+    "ingredients": ["fish", "yam", "green banana", "dumplings", "garlic", "thyme", "culantro"],
+    "image": "../assets/foods/fish-broth.jpg"
   },
   {
     "id": 30,
@@ -818,19 +505,8 @@
     "fiber_g": 9,
     "sugar_g": 5,
     "sodium_mg": 540,
-    "tags": [
-      "Caribbean",
-      "Vegetarian",
-      "Lunch"
-    ],
-    "ingredients": [
-      "lentils",
-      "rice",
-      "garlic",
-      "onion",
-      "tomato",
-      "thyme",
-      "coconut oil"
-    ]
+    "tags": ["Caribbean", "Vegetarian", "Lunch"],
+    "ingredients": ["lentils", "rice", "garlic", "onion", "tomato", "thyme", "coconut oil"],
+    "image": "../assets/foods/placeholder.jpg"
   }
 ]

@@ -2,18 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nutrition | Tabanka Tamers</title>
-  <link rel="icon" href="../assets/images/favicon.ico">
+  <link rel="icon" href="../assets/images/favicon.ico" />
   <link rel="stylesheet" href="../styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"
+    rel="stylesheet"
+  />
 </head>
 <body>
-
   <header class="navbar">
     <div class="logo">
-    <img src="../assets/images/logo.png" alt="Tabanka Tamers logo" class="logo-img">
-    <span>Tabanka Tamers</span>
+      <img src="../assets/images/logo.png" alt="Tabanka Tamers logo" class="logo-img" />
+      <span>Tabanka Tamers</span>
     </div>
 
     <nav>
@@ -36,7 +38,8 @@
       <p class="tag">Fuel smarter</p>
       <h1>Nutrition & Recipes</h1>
       <p class="subtitle">
-        Search, filter, and explore Caribbean meals. Guests can browse freely, while nutrition stats and tracking are available after login.
+        Search, filter, and explore Caribbean meals. Guests can browse freely,
+        while nutrition stats and tracking are available after login.
       </p>
     </section>
 
@@ -46,15 +49,43 @@
           <input
             id="recipeSearchInput"
             class="search-input"
+            type="text"
             placeholder="Search recipes..."
           />
-          <button id="recipeSearchBtn" class="btn-primary">Search</button>
+          <button id="recipeSearchBtn" class="btn-primary" type="button">Search</button>
+        </div>
+
+        <div class="filter-dropdown-wrapper">
+          <button id="toggleFiltersBtn" class="btn-secondary" type="button">
+            Advanced Filters ▼
+          </button>
+
+          <div id="filterDropdown" class="filter-dropdown hidden">
+            <select id="categoryFilter" class="search-input">
+              <option value="all">All Categories</option>
+              <option value="Breakfast">Breakfast</option>
+              <option value="Lunch">Lunch</option>
+              <option value="Dinner">Dinner</option>
+              <option value="Snack">Snack</option>
+              <option value="Soup">Soup</option>
+              <option value="Dessert">Dessert</option>
+              <option value="Side">Side</option>
+            </select>
+
+            <input id="maxCaloriesFilter" class="search-input" type="number" placeholder="Max Calories" min="0" />
+            <input id="minProteinFilter" class="search-input" type="number" placeholder="Min Protein (g)" min="0" />
+            <input id="maxCarbsFilter" class="search-input" type="number" placeholder="Max Carbs (g)" min="0" />
+            <input id="maxFatFilter" class="search-input" type="number" placeholder="Max Fat (g)" min="0" />
+            <input id="minFiberFilter" class="search-input" type="number" placeholder="Min Fiber (g)" min="0" />
+            <input id="maxSugarFilter" class="search-input" type="number" placeholder="Max Sugar (g)" min="0" />
+            <input id="maxSodiumFilter" class="search-input" type="number" placeholder="Max Sodium (mg)" min="0" />
+          </div>
         </div>
 
         <div class="chip-row">
-          <button class="chip-btn active-chip" data-filter="all">All</button>
-          <button class="chip-btn" data-filter="protein">High Protein</button>
-          <button class="chip-btn" data-filter="lowcarb">Low Carb</button>
+          <button class="chip-btn active-chip" data-filter="all" type="button">All</button>
+          <button class="chip-btn" data-filter="protein" type="button">High Protein</button>
+          <button class="chip-btn" data-filter="lowcarb" type="button">Low Carb</button>
         </div>
       </div>
     </section>
