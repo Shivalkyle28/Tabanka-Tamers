@@ -252,7 +252,7 @@
     "sodium_mg": 180,
     "tags": ["Caribbean", "Vegan", "Low Carb"],
     "ingredients": ["eggplant", "garlic", "onion", "olive oil", "pepper", "culantro"],
-    "image": "../assets/foods/placeholder.jpg"
+    "image": "../assets/foods/baigan-choka.jpg"
   },
   {
     "id": 16,
@@ -269,7 +269,7 @@
     "sodium_mg": 250,
     "tags": ["Caribbean", "Vegan", "Side"],
     "ingredients": ["pumpkin", "garlic", "cumin", "turmeric", "onion", "oil"],
-    "image": "../assets/foods/placeholder.jpg"
+    "image": "../assets/foods/pumpkin-talkari.jpg"
   },
   {
     "id": 17,
@@ -286,7 +286,7 @@
     "sodium_mg": 760,
     "tags": ["Caribbean", "Dinner", "High Protein", "Low Carb"],
     "ingredients": ["goat", "curry powder", "garlic", "onion", "potato", "thyme", "scallion"],
-    "image": "../assets/foods/placeholder.jpg"
+    "image": "../assets/foods/curry-goat.jpg"
   },
   {
     "id": 18,
@@ -303,7 +303,7 @@
     "sodium_mg": 620,
     "tags": ["Caribbean", "Dinner", "High Protein", "Low Carb"],
     "ingredients": ["fish", "onion", "garlic", "tomato", "sweet pepper", "brown sugar", "thyme"],
-    "image": "../assets/foods/placeholder.jpg"
+    "image": "../assets/foods/brown-stew-fish.jpg"
   },
   {
     "id": 19,
@@ -354,7 +354,7 @@
     "sodium_mg": 620,
     "tags": ["Caribbean", "Soup", "Vegetarian"],
     "ingredients": ["split peas", "carrot", "pumpkin", "dumplings", "garlic", "thyme"],
-    "image": "../assets/foods/placeholder.jpg"
+    "image": "../assets/foods/split-pea-soup.jpg"
   },
   {
     "id": 22,
@@ -473,7 +473,7 @@
     "sodium_mg": 690,
     "tags": ["Caribbean", "Vegetarian", "Lunch"],
     "ingredients": ["roti", "chickpeas", "curry powder", "garlic", "onion", "cumin"],
-    "image": "../assets/foods/placeholder.jpg"
+    "image": "../assets/foods/sada-roti-with-curry-channa.jpg"
   },
   {
     "id": 29,
@@ -507,6 +507,6 @@
     "sodium_mg": 540,
     "tags": ["Caribbean", "Vegetarian", "Lunch"],
     "ingredients": ["lentils", "rice", "garlic", "onion", "tomato", "thyme", "coconut oil"],
-    "image": "../assets/foods/placeholder.jpg"
+    "image": "../assets/foods/stewed-lentil-and-rice.jpg"
   }
 ]
