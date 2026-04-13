@@ -17,7 +17,7 @@
       const currentUser = JSON.parse(localStorage.getItem("currentUser"));
       if (!currentUser) return;
 
-      const preferencesKey = preferences_${currentUser.username};
+      const preferencesKey = `preferences_${currentUser.username}`;
       const preferences = JSON.parse(localStorage.getItem(preferencesKey)) || {};
 
       if (preferences.theme === "light") {

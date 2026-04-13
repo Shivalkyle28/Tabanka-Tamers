@@ -4,17 +4,34 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login | Tabanka Tamers</title>
-  <link rel="icon" href="../assets/images/favicon.ico">
+  <link rel="icon" href="../assets/images/favicon.ico" />
   <link rel="stylesheet" href="../styles.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"
+    rel="stylesheet"
+  />
 </head>
 <body>
+  <script>
+    (function () {
+      const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      if (!currentUser) return;
+
+      const preferencesKey = `preferences_${currentUser.username}`;
+      const preferences = JSON.parse(localStorage.getItem(preferencesKey)) || {};
+
+      if (preferences.theme === "light") {
+        document.body.classList.add("light-mode");
+      }
+    })();
+  </script>
+
   <header class="navbar">
     <div class="logo">
-    <img src="../assets/images/logo.png" alt="Tabanka Tamers logo" class="logo-img">
-    <span>Tabanka Tamers</span>
+      <img src="../assets/images/logo.png" alt="Tabanka Tamers logo" class="logo-img" />
+      <span>Tabanka Tamers</span>
     </div>
 
     <nav>
@@ -34,7 +51,7 @@
     <section class="auth-wrapper">
       <div class="auth-intro">
         <p class="tag">Welcome back</p>
-        <h1>Join Tabanka</h1>
+        <h1>Join Tabanka Tamers</h1>
         <p class="subtitle">
           Track your favorite foods, save exercises, and build your fitness dashboard.
         </p>
