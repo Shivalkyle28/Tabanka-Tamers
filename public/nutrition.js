@@ -199,7 +199,7 @@ function applyFilters() {
 
     const matchesSearch =
       recipe.name.toLowerCase().includes(searchValue) ||
-      recipe.description.toLowerCase().includes(searchValue) ||
+      (recipe.description || "").toLowerCase().includes(searchValue) ||
       searchableIngredients.includes(searchValue) ||
       searchableTags.includes(searchValue);
 
@@ -256,12 +256,6 @@ function renderRecipes() {
         <div class="recipe-card-body">
           <h3>${recipe.name}</h3>
           <p class="recipe-tags">${recipe.tags.join(" • ")}</p>
-          <div class="recipe-macro-preview">
-            <span>Cals: ${recipe.calories}</span>
-            <span>P: ${recipe.protein_g}g</span>
-            <span>C: ${recipe.carbs_g}g</span>
-            <span>F: ${recipe.fat_g}g</span>
-          </div>
         </div>
       </article>
     `;
@@ -316,51 +310,51 @@ function openRecipeModal(id) {
     <p class="muted-text"><strong>Serving Size:</strong> ${recipe.serving_size || "N/A"}</p>
     <p class="recipe-tags">${recipe.tags.join(" • ")}</p>
 
-    <div class="recipe-detail-grid">
-      <div class="recipe-detail-stat">
-        <strong>${recipe.calories || 0}</strong>
-        <span>Calories</span>
-      </div>
-      <div class="recipe-detail-stat">
-        <strong>${recipe.protein_g || 0}g</strong>
-        <span>Protein</span>
-      </div>
-      <div class="recipe-detail-stat">
-        <strong>${recipe.carbs_g || 0}g</strong>
-        <span>Carbs</span>
-      </div>
-      <div class="recipe-detail-stat">
-        <strong>${recipe.fat_g || 0}g</strong>
-        <span>Fat</span>
-      </div>
-      <div class="recipe-detail-stat">
-        <strong>${recipe.fiber_g || 0}g</strong>
-        <span>Fiber</span>
-      </div>
-      <div class="recipe-detail-stat">
-        <strong>${recipe.sugar_g || 0}g</strong>
-        <span>Sugar</span>
-      </div>
-      <div class="recipe-detail-stat">
-        <strong>${recipe.sodium_mg || 0}mg</strong>
-        <span>Sodium</span>
-      </div>
-    </div>
-
-    <div class="recipe-detail-text">
-      <h3>Ingredients</h3>
-      <ul class="recipe-ingredients-list">
-        ${
-          recipe.ingredients.length
-            ? recipe.ingredients.map(item => `<li>${item}</li>`).join("")
-            : "<li>No ingredients available.</li>"
-        }
-      </ul>
-    </div>
-
     ${
       user
         ? `
+          <div class="recipe-detail-grid">
+            <div class="recipe-detail-stat">
+              <strong>${recipe.calories || 0}</strong>
+              <span>Calories</span>
+            </div>
+            <div class="recipe-detail-stat">
+              <strong>${recipe.protein_g || 0}g</strong>
+              <span>Protein</span>
+            </div>
+            <div class="recipe-detail-stat">
+              <strong>${recipe.carbs_g || 0}g</strong>
+              <span>Carbs</span>
+            </div>
+            <div class="recipe-detail-stat">
+              <strong>${recipe.fat_g || 0}g</strong>
+              <span>Fat</span>
+            </div>
+            <div class="recipe-detail-stat">
+              <strong>${recipe.fiber_g || 0}g</strong>
+              <span>Fiber</span>
+            </div>
+            <div class="recipe-detail-stat">
+              <strong>${recipe.sugar_g || 0}g</strong>
+              <span>Sugar</span>
+            </div>
+            <div class="recipe-detail-stat">
+              <strong>${recipe.sodium_mg || 0}mg</strong>
+              <span>Sodium</span>
+            </div>
+          </div>
+
+          <div class="recipe-detail-text">
+            <h3>Ingredients</h3>
+            <ul class="recipe-ingredients-list">
+              ${
+                recipe.ingredients.length
+                  ? recipe.ingredients.map(item => `<li>${item}</li>`).join("")
+                  : "<li>No ingredients available.</li>"
+              }
+            </ul>
+          </div>
+
           <div class="landing-actions" style="margin-top: 20px;">
             <button class="btn-secondary" type="button" onclick="addFavoriteFood(${recipe.id})">
               Favorite
@@ -371,9 +365,17 @@ function openRecipeModal(id) {
           </div>
         `
         : `
-          <p class="muted-text" style="margin-top: 18px;">
-            Log in to save favorites and track this meal in your daily nutrition log.
-          </p>
+          <div class="recipe-detail-text" style="margin-top: 20px; text-align: center;">
+            <h3>Login Required</h3>
+            <p class="muted-text">
+              Nutrition facts, ingredients, and meal tracking are available after login.
+            </p>
+            <div class="landing-actions" style="justify-content: center; margin-top: 18px;">
+              <button class="btn-primary" type="button" onclick="window.location.href='auth.html'">
+                Login to Unlock
+              </button>
+            </div>
+          </div>
         `
     }
   `;
