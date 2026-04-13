@@ -17,7 +17,7 @@
       const currentUser = JSON.parse(localStorage.getItem("currentUser"));
       if (!currentUser) return;
 
-      const preferencesKey = `preferences_${currentUser.username}`;
+      const preferencesKey = preferences_${currentUser.username};
       const preferences = JSON.parse(localStorage.getItem(preferencesKey)) || {};
 
       if (preferences.theme === "light") {
@@ -52,9 +52,8 @@
       <p class="tag">Fuel smarter</p>
       <h1>Nutrition & Recipes</h1>
       <p class="subtitle">
-        Search, filter, and explore Caribbean meals with serving sizes, ingredients,
-        and full nutrition facts. Logged-in users can also save favorites and add meals
-        to their daily nutrition log.
+        Search, filter, and explore Caribbean meals. Guests can browse freely,
+        while nutrition facts, ingredients, and meal tracking are available after login.
       </p>
     </section>
 
@@ -67,7 +66,9 @@
             type="text"
             placeholder="Search recipes..."
           />
-          <button id="recipeSearchBtn" class="btn-primary" type="button">Search</button>
+          <button id="recipeSearchBtn" class="btn-primary" type="button">
+            Search
+          </button>
         </div>
 
         <div class="filter-dropdown-wrapper">
@@ -87,13 +88,55 @@
               <option value="Side">Side</option>
             </select>
 
-            <input id="maxCaloriesFilter" class="search-input" type="number" placeholder="Max Calories" min="0" />
-            <input id="minProteinFilter" class="search-input" type="number" placeholder="Min Protein (g)" min="0" />
-            <input id="maxCarbsFilter" class="search-input" type="number" placeholder="Max Carbs (g)" min="0" />
-            <input id="maxFatFilter" class="search-input" type="number" placeholder="Max Fat (g)" min="0" />
-            <input id="minFiberFilter" class="search-input" type="number" placeholder="Min Fiber (g)" min="0" />
-            <input id="maxSugarFilter" class="search-input" type="number" placeholder="Max Sugar (g)" min="0" />
-            <input id="maxSodiumFilter" class="search-input" type="number" placeholder="Max Sodium (mg)" min="0" />
+            <input
+              id="maxCaloriesFilter"
+              class="search-input"
+              type="number"
+              placeholder="Max Calories"
+              min="0"
+            />
+            <input
+              id="minProteinFilter"
+              class="search-input"
+              type="number"
+              placeholder="Min Protein (g)"
+              min="0"
+            />
+            <input
+              id="maxCarbsFilter"
+              class="search-input"
+              type="number"
+              placeholder="Max Carbs (g)"
+              min="0"
+            />
+            <input
+              id="maxFatFilter"
+              class="search-input"
+              type="number"
+              placeholder="Max Fat (g)"
+              min="0"
+            />
+            <input
+              id="minFiberFilter"
+              class="search-input"
+              type="number"
+              placeholder="Min Fiber (g)"
+              min="0"
+            />
+            <input
+              id="maxSugarFilter"
+              class="search-input"
+              type="number"
+              placeholder="Max Sugar (g)"
+              min="0"
+            />
+            <input
+              id="maxSodiumFilter"
+              class="search-input"
+              type="number"
+              placeholder="Max Sodium (mg)"
+              min="0"
+            />
           </div>
         </div>
 
