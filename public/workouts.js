@@ -47,8 +47,24 @@ function getCurrentUser() {
 }
 
 function getUserStorageKey(baseKey) {
-  const currentUser = getCurrentUser();
-  return currentUser ? `${baseKey}_${currentUser.username}` : null;
+  const user = getCurrentUser();
+  return user ? `${baseKey}_${user.username}` : null;
+}
+
+function updateUserStatus() {
+  const user = getCurrentUser();
+
+  if (user) {
+    userStatus.textContent = user.username;
+    userStatus.classList.add("clickable-user");
+    userStatus.onclick = () => {
+      window.location.href = "profile.html";
+    };
+  } else {
+    userStatus.textContent = "Guest";
+    userStatus.classList.remove("clickable-user");
+    userStatus.onclick = null;
+  }
 }
 
 function clearBodyHighlights() {
@@ -86,10 +102,7 @@ function highlightMuscleParts(muscles) {
     lower_back: ["lowerback"]
   };
 
-  const svgDocs = [
-    frontBodySvg?.contentDocument,
-    backBodySvg?.contentDocument
-  ];
+  const svgDocs = [frontBodySvg?.contentDocument, backBodySvg?.contentDocument];
 
   muscles.forEach(muscle => {
     const normalized = muscle.toLowerCase().replace(/\s+/g, "").replace(/-/g, "");
@@ -107,22 +120,6 @@ function highlightMuscleParts(muscles) {
       });
     });
   });
-}
-
-function updateUserStatus() {
-  const currentUser = getCurrentUser();
-
-  if (currentUser) {
-    userStatus.textContent = currentUser.username;
-    userStatus.classList.add("clickable-user");
-    userStatus.onclick = function () {
-      window.location.href = "profile.html";
-    };
-  } else {
-    userStatus.textContent = "Guest";
-    userStatus.classList.remove("clickable-user");
-    userStatus.onclick = null;
-  }
 }
 
 function formatTime(totalSeconds) {
@@ -295,6 +292,8 @@ function displayExercises(exercises) {
       ? exercise.primaryMuscles.join(", ")
       : "N/A";
 
+    const safeName = exercise.name.replace(/'/g, "\\'");
+
     workoutExercisesContainer.innerHTML += `
       <div class="card">
         ${
@@ -312,11 +311,11 @@ function displayExercises(exercises) {
         <p><strong>Level:</strong> ${exercise.level || "N/A"}</p>
         <p><strong>Primary Muscles:</strong> ${primaryMuscles}</p>
 
-        <button class="btn-primary add-workout-btn" onclick="addExerciseToWorkout('${exercise.name.replace(/'/g, "\\'")}')">
+        <button class="btn-primary add-workout-btn" onclick="addExerciseToWorkout('${safeName}')">
           Add to Workout
         </button>
 
-        <button class="btn-secondary add-workout-btn" onclick="addFavoriteExercise('${exercise.name.replace(/'/g, "\\'")}')">
+        <button class="btn-secondary add-workout-btn" onclick="addFavoriteExercise('${safeName}')">
           Add to Favorites
         </button>
       </div>
@@ -369,6 +368,11 @@ function addExerciseToWorkout(exerciseName) {
 
   updateSelectedMuscles(selectedExercise.primaryMuscles || []);
   renderCurrentWorkout();
+
+  document.querySelector(".section-header h2")?.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
 }
 
 function renderCurrentWorkout() {
@@ -493,8 +497,9 @@ function saveWorkout() {
 }
 
 if (logoutBtn) {
-  logoutBtn.addEventListener("click", function () {
-    logoutUser();
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("currentUser");
+    window.location.href = "../index.html";
   });
 }
 

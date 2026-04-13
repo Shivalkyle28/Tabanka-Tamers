@@ -19,18 +19,16 @@ const savedWorkoutsContainer = document.getElementById("savedWorkoutsContainer")
 const userStatus = document.getElementById("userStatus");
 const logoutBtn = document.getElementById("logoutBtn");
 
+/* =========================
+   HELPERS
+========================= */
 function getCurrentUser() {
   return JSON.parse(localStorage.getItem("currentUser"));
 }
 
 function getUserStorageKey(baseKey) {
-  const currentUser = getCurrentUser();
-  return currentUser ? `${baseKey}_${currentUser.username}` : null;
-}
-
-function logoutUserLocal() {
-  localStorage.removeItem("currentUser");
-  window.location.href = "../index.html";
+  const user = getCurrentUser();
+  return user ? `${baseKey}_${user.username}` : null;
 }
 
 function protectPage() {
@@ -40,42 +38,59 @@ function protectPage() {
   }
 }
 
-function updateNavbarForPagesLocal() {
-  const currentUser = getCurrentUser();
+function updateNavbar() {
+  const user = getCurrentUser();
 
-  if (userStatus) {
-    if (currentUser) {
-      userStatus.textContent = currentUser.username;
-      userStatus.classList.add("clickable-user");
-      userStatus.onclick = function () {
-        window.location.href = "profile.html";
-      };
-    } else {
-      userStatus.textContent = "Guest";
-      userStatus.classList.remove("clickable-user");
-      userStatus.onclick = null;
-    }
+  if (!userStatus) return;
+
+  if (user) {
+    userStatus.textContent = user.username;
+    userStatus.classList.add("clickable-user");
+    userStatus.onclick = () => {
+      window.location.href = "profile.html";
+    };
+  } else {
+    userStatus.textContent = "Guest";
+    userStatus.classList.remove("clickable-user");
+    userStatus.onclick = null;
   }
 }
 
+function logoutUser() {
+  localStorage.removeItem("currentUser");
+  window.location.href = "../index.html";
+}
+
+/* =========================
+   DATE / TIME
+========================= */
 function getTodayString() {
   return new Date().toISOString().split("T")[0];
 }
 
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+}
+
+/* =========================
+   DASHBOARD DATA
+========================= */
 function loadDashboardData() {
   const foodsKey = getUserStorageKey("favoriteFoods");
   const workoutsKey = getUserStorageKey("savedWorkouts");
 
-  const favoriteFoods = JSON.parse(localStorage.getItem(foodsKey)) || [];
-  const savedWorkouts = JSON.parse(localStorage.getItem(workoutsKey)) || [];
+  const foods = JSON.parse(localStorage.getItem(foodsKey)) || [];
+  const workouts = JSON.parse(localStorage.getItem(workoutsKey)) || [];
 
-  const calories = favoriteFoods.reduce((sum, food) => sum + Number(food.calories || 0), 0);
-  const protein = favoriteFoods.reduce((sum, food) => sum + Number(food.protein_g || 0), 0);
-  const carbs = favoriteFoods.reduce((sum, food) => sum + Number(food.carbs_g || 0), 0);
-  const fat = favoriteFoods.reduce((sum, food) => sum + Number(food.fat_g || 0), 0);
+  const calories = foods.reduce((sum, f) => sum + Number(f.calories || 0), 0);
+  const protein = foods.reduce((sum, f) => sum + Number(f.protein_g || 0), 0);
+  const carbs = foods.reduce((sum, f) => sum + Number(f.carbs_g || 0), 0);
+  const fat = foods.reduce((sum, f) => sum + Number(f.fat_g || 0), 0);
 
-  totalFoods.textContent = favoriteFoods.length;
-  totalSavedWorkouts.textContent = savedWorkouts.length;
+  totalFoods.textContent = foods.length;
+  totalSavedWorkouts.textContent = workouts.length;
   totalCalories.textContent = calories;
   totalProtein.textContent = `${protein} g`;
 
@@ -85,86 +100,84 @@ function loadDashboardData() {
   summaryFat.textContent = `${fat} g`;
 
   renderTodayLog();
-  renderSavedWorkouts(savedWorkouts);
+  renderSavedWorkouts(workouts);
 }
 
-function formatTime(totalSeconds) {
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-}
+/* =========================
+   WORKOUTS
+========================= */
+function deleteSavedWorkout(id) {
+  const key = getUserStorageKey("savedWorkouts");
+  let workouts = JSON.parse(localStorage.getItem(key)) || [];
 
-function deleteSavedWorkout(workoutId) {
-  const storageKey = getUserStorageKey("savedWorkouts");
-  let savedWorkouts = JSON.parse(localStorage.getItem(storageKey)) || [];
-
-  savedWorkouts = savedWorkouts.filter(workout => workout.id !== workoutId);
-  localStorage.setItem(storageKey, JSON.stringify(savedWorkouts));
+  workouts = workouts.filter(w => w.id !== id);
+  localStorage.setItem(key, JSON.stringify(workouts));
 
   loadDashboardData();
 }
 
-function renderSavedWorkouts(savedWorkouts) {
+function renderSavedWorkouts(workouts) {
   savedWorkoutsContainer.innerHTML = "";
 
-  if (savedWorkouts.length === 0) {
-    savedWorkoutsContainer.innerHTML = `<p class="empty-state">No saved workouts yet.</p>`;
+  if (workouts.length === 0) {
+    savedWorkoutsContainer.innerHTML =
+      `<p class="empty-state">No saved workouts yet.</p>`;
     return;
   }
 
-  savedWorkouts
-    .slice()
-    .reverse()
-    .forEach(workout => {
-      savedWorkoutsContainer.innerHTML += `
-        <div class="saved-workout-card">
-          <div class="saved-workout-header">
-            <div>
-              <h3>Workout Session</h3>
-              <p class="muted-text">${workout.date}</p>
-            </div>
-            <button class="btn-secondary small-btn" onclick="deleteSavedWorkout(${workout.id})">
-              Delete
-            </button>
+  workouts.slice().reverse().forEach(w => {
+    savedWorkoutsContainer.innerHTML += `
+      <div class="saved-workout-card">
+        <div class="saved-workout-header">
+          <div>
+            <h3>Workout Session</h3>
+            <p class="muted-text">${w.date}</p>
           </div>
-
-          <p><strong>Duration:</strong> ${formatTime(workout.durationSeconds)}</p>
-          <p><strong>Exercises:</strong> ${workout.exercises.length}</p>
-
-          <div class="saved-exercise-list">
-            ${workout.exercises.map(exercise => `
-              <div class="saved-exercise-row">
-                <span>${exercise.name}</span>
-                <span>${exercise.sets} sets × ${exercise.reps} reps @ ${exercise.weight} lbs</span>
-              </div>
-            `).join("")}
-          </div>
+          <button class="btn-secondary small-btn" onclick="deleteSavedWorkout(${w.id})">
+            Delete
+          </button>
         </div>
-      `;
-    });
+
+        <p><strong>Duration:</strong> ${formatTime(w.durationSeconds)}</p>
+        <p><strong>Exercises:</strong> ${w.exercises.length}</p>
+
+        <div class="saved-exercise-list">
+          ${w.exercises.map(e => `
+            <div class="saved-exercise-row">
+              <span>${e.name}</span>
+              <span>${e.sets} × ${e.reps} @ ${e.weight} lbs</span>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  });
 }
 
-function deleteTodayLogEntry(entryId) {
-  const storageKey = getUserStorageKey("dailyNutritionLog");
-  let dailyLog = JSON.parse(localStorage.getItem(storageKey)) || [];
+/* =========================
+   TODAY LOG
+========================= */
+function deleteTodayLogEntry(id) {
+  const key = getUserStorageKey("dailyNutritionLog");
+  let log = JSON.parse(localStorage.getItem(key)) || [];
 
-  dailyLog = dailyLog.filter(entry => entry.entryId !== entryId);
-  localStorage.setItem(storageKey, JSON.stringify(dailyLog));
+  log = log.filter(e => e.entryId !== id);
+  localStorage.setItem(key, JSON.stringify(log));
 
   renderTodayLog();
 }
 
 function renderTodayLog() {
-  const storageKey = getUserStorageKey("dailyNutritionLog");
-  const dailyLog = JSON.parse(localStorage.getItem(storageKey)) || [];
+  const key = getUserStorageKey("dailyNutritionLog");
+  const log = JSON.parse(localStorage.getItem(key)) || [];
+
   const today = getTodayString();
+  const entries = log.filter(e => e.date === today);
 
-  const todayEntries = dailyLog.filter(entry => entry.date === today);
-
-  const calories = todayEntries.reduce((sum, item) => sum + Number(item.calories || 0), 0);
-  const protein = todayEntries.reduce((sum, item) => sum + Number(item.protein_g || 0), 0);
-  const carbs = todayEntries.reduce((sum, item) => sum + Number(item.carbs_g || 0), 0);
-  const fat = todayEntries.reduce((sum, item) => sum + Number(item.fat_g || 0), 0);
+  const calories = entries.reduce((s, e) => s + Number(e.calories || 0), 0);
+  const protein = entries.reduce((s, e) => s + Number(e.protein_g || 0), 0);
+  const carbs = entries.reduce((s, e) => s + Number(e.carbs_g || 0), 0);
+  const fat = entries.reduce((s, e) => s + Number(e.fat_g || 0), 0);
 
   todayCalories.textContent = `${calories} kcal`;
   todayProtein.textContent = `${protein} g`;
@@ -173,52 +186,41 @@ function renderTodayLog() {
 
   todayLogContainer.innerHTML = "";
 
-  if (todayEntries.length === 0) {
-    todayLogContainer.innerHTML = `<p class="empty-state">No foods logged for today yet.</p>`;
+  if (entries.length === 0) {
+    todayLogContainer.innerHTML =
+      `<p class="empty-state">No foods logged for today yet.</p>`;
     return;
   }
 
-  todayEntries
-    .slice()
-    .reverse()
-    .forEach(entry => {
-      todayLogContainer.innerHTML += `
-        <div class="saved-workout-card">
-          <div class="saved-workout-header">
-            <div>
-              <h3>${entry.name}</h3>
-              <p class="muted-text">${entry.date}</p>
-            </div>
-            <button class="btn-secondary small-btn" onclick="deleteTodayLogEntry(${entry.entryId})">
-              Delete
-            </button>
+  entries.slice().reverse().forEach(e => {
+    todayLogContainer.innerHTML += `
+      <div class="saved-workout-card">
+        <div class="saved-workout-header">
+          <div>
+            <h3>${e.name}</h3>
+            <p class="muted-text">${e.date}</p>
           </div>
-
-          <div class="saved-exercise-list">
-            <div class="saved-exercise-row">
-              <span>Calories</span>
-              <span>${entry.calories} kcal</span>
-            </div>
-            <div class="saved-exercise-row">
-              <span>Protein</span>
-              <span>${entry.protein_g} g</span>
-            </div>
-            <div class="saved-exercise-row">
-              <span>Carbs</span>
-              <span>${entry.carbs_g} g</span>
-            </div>
-            <div class="saved-exercise-row">
-              <span>Fat</span>
-              <span>${entry.fat_g} g</span>
-            </div>
-          </div>
+          <button class="btn-secondary small-btn" onclick="deleteTodayLogEntry(${e.entryId})">
+            Delete
+          </button>
         </div>
-      `;
-    });
+
+        <div class="saved-exercise-list">
+          <div class="saved-exercise-row"><span>Calories</span><span>${e.calories} kcal</span></div>
+          <div class="saved-exercise-row"><span>Protein</span><span>${e.protein_g} g</span></div>
+          <div class="saved-exercise-row"><span>Carbs</span><span>${e.carbs_g} g</span></div>
+          <div class="saved-exercise-row"><span>Fat</span><span>${e.fat_g} g</span></div>
+        </div>
+      </div>
+    `;
+  });
 }
 
-logoutBtn.addEventListener("click", logoutUserLocal);
+/* =========================
+   INIT
+========================= */
+logoutBtn.addEventListener("click", logoutUser);
 
 protectPage();
-updateNavbarForPagesLocal();
+updateNavbar();
 loadDashboardData();

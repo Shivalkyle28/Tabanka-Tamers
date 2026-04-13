@@ -18,13 +18,16 @@ const filterButtons = document.querySelectorAll(".progress-filter-btn");
 
 let selectedRangeDays = 7;
 
+/* =========================
+   USER
+========================= */
 function getCurrentUser() {
   return JSON.parse(localStorage.getItem("currentUser"));
 }
 
 function getUserStorageKey(baseKey) {
-  const currentUser = getCurrentUser();
-  return currentUser ? `${baseKey}_${currentUser.username}` : null;
+  const user = getCurrentUser();
+  return user ? `${baseKey}_${user.username}` : null;
 }
 
 function protectPage() {
@@ -35,63 +38,54 @@ function protectPage() {
 }
 
 function updateUserStatus() {
-  const currentUser = getCurrentUser();
+  const user = getCurrentUser();
 
-  if (currentUser) {
-    userStatus.textContent = currentUser.username;
+  if (user) {
+    userStatus.textContent = user.username;
     userStatus.classList.add("clickable-user");
-    userStatus.onclick = function () {
-      window.location.href = "profile.html";
-    };
+    userStatus.onclick = () => window.location.href = "profile.html";
   } else {
     userStatus.textContent = "Guest";
     userStatus.classList.remove("clickable-user");
-    userStatus.onclick = null;
   }
 }
 
-function getSavedWorkouts() {
-  const key = getUserStorageKey("savedWorkouts");
-  return JSON.parse(localStorage.getItem(key)) || [];
-}
-
-function getDailyNutritionLog() {
-  const key = getUserStorageKey("dailyNutritionLog");
-  return JSON.parse(localStorage.getItem(key)) || [];
-}
-
-function getProfile() {
-  const key = getUserStorageKey("profile");
-  return JSON.parse(localStorage.getItem(key)) || {};
-}
-
-function logoutPageUser() {
+function logoutUser() {
   localStorage.removeItem("currentUser");
   window.location.href = "../index.html";
 }
 
-function filterWorkoutsByRange(workouts, days) {
+/* =========================
+   DATA
+========================= */
+function getSavedWorkouts() {
+  return JSON.parse(localStorage.getItem(getUserStorageKey("savedWorkouts"))) || [];
+}
+
+function getNutritionLog() {
+  return JSON.parse(localStorage.getItem(getUserStorageKey("dailyNutritionLog"))) || [];
+}
+
+function getProfile() {
+  return JSON.parse(localStorage.getItem(getUserStorageKey("profile"))) || {};
+}
+
+/* =========================
+   FILTERING
+========================= */
+function filterByRange(list, days) {
   const now = new Date();
 
-  return workouts.filter(workout => {
-    const workoutDate = new Date(workout.date);
-    const diffMs = now - workoutDate;
-    const diffDays = diffMs / (1000 * 60 * 60 * 24);
-    return diffDays <= days;
+  return list.filter(item => {
+    const date = new Date(item.date);
+    const diff = (now - date) / (1000 * 60 * 60 * 24);
+    return diff <= days;
   });
 }
 
-function filterNutritionByRange(entries, days) {
-  const now = new Date();
-
-  return entries.filter(entry => {
-    const entryDate = new Date(entry.date);
-    const diffMs = now - entryDate;
-    const diffDays = diffMs / (1000 * 60 * 60 * 24);
-    return diffDays <= days;
-  });
-}
-
+/* =========================
+   CANVAS HELPERS
+========================= */
 function resizeCanvas(canvas) {
   const rect = canvas.getBoundingClientRect();
   canvas.width = rect.width;
@@ -104,364 +98,230 @@ function drawEmptyChart(canvas, message) {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "#9aa4b2";
-  ctx.font = "16px Inter";
   ctx.textAlign = "center";
   ctx.fillText(message, canvas.width / 2, canvas.height / 2);
 }
 
-function drawAxes(ctx, width, height, padding) {
+function drawAxes(ctx, w, h, p) {
   ctx.strokeStyle = "#445066";
   ctx.lineWidth = 2;
 
   ctx.beginPath();
-  ctx.moveTo(padding, padding);
-  ctx.lineTo(padding, height - padding);
-  ctx.lineTo(width - padding, height - padding);
+  ctx.moveTo(p, p);
+  ctx.lineTo(p, h - p);
+  ctx.lineTo(w - p, h - p);
   ctx.stroke();
 }
 
+/* =========================
+   CHARTS
+========================= */
 function drawStrengthChart(workouts) {
-  if (!workouts.length) {
-    drawEmptyChart(strengthChart, "No workout data available.");
-    return;
-  }
+  if (!workouts.length) return drawEmptyChart(strengthChart, "No workout data.");
 
   const ctx = strengthChart.getContext("2d");
   resizeCanvas(strengthChart);
 
-  const width = strengthChart.width;
-  const height = strengthChart.height;
-  const padding = 50;
+  const w = strengthChart.width;
+  const h = strengthChart.height;
+  const p = 50;
 
-  ctx.clearRect(0, 0, width, height);
-  drawAxes(ctx, width, height, padding);
+  ctx.clearRect(0, 0, w, h);
+  drawAxes(ctx, w, h, p);
 
-  const strengthPoints = workouts.map(workout => {
-    const maxWeight = Math.max(
-      ...workout.exercises.map(exercise => Number(exercise.weight || 0)),
-      0
-    );
+  const points = workouts.map(w =>
+    Math.max(...w.exercises.map(e => Number(e.weight || 0)), 0)
+  );
 
-    return { value: maxWeight };
-  });
-
-  const maxValue = Math.max(...strengthPoints.map(point => point.value), 1);
+  const max = Math.max(...points, 1);
 
   ctx.strokeStyle = "#b7ff3c";
-  ctx.fillStyle = "#b7ff3c";
   ctx.lineWidth = 3;
-
   ctx.beginPath();
 
-  strengthPoints.forEach((point, index) => {
-    const x = padding + ((width - padding * 2) / Math.max(strengthPoints.length - 1, 1)) * index;
-    const y = height - padding - (point.value / maxValue) * (height - padding * 2);
+  points.forEach((val, i) => {
+    const x = p + ((w - p * 2) / Math.max(points.length - 1, 1)) * i;
+    const y = h - p - (val / max) * (h - p * 2);
 
-    if (index === 0) {
-      ctx.moveTo(x, y);
-    } else {
-      ctx.lineTo(x, y);
-    }
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
   });
 
   ctx.stroke();
-
-  strengthPoints.forEach((point, index) => {
-    const x = padding + ((width - padding * 2) / Math.max(strengthPoints.length - 1, 1)) * index;
-    const y = height - padding - (point.value / maxValue) * (height - padding * 2);
-
-    ctx.beginPath();
-    ctx.arc(x, y, 5, 0, Math.PI * 2);
-    ctx.fill();
-  });
 }
 
 function drawBodyweightChart(profile) {
   const current = Number(profile.currentWeight || 0);
   const goal = Number(profile.goalWeight || 0);
 
-  if (!current && !goal) {
-    drawEmptyChart(bodyweightChart, "No bodyweight data available.");
-    return;
-  }
+  if (!current && !goal)
+    return drawEmptyChart(bodyweightChart, "No bodyweight data.");
 
   const ctx = bodyweightChart.getContext("2d");
   resizeCanvas(bodyweightChart);
 
-  const width = bodyweightChart.width;
-  const height = bodyweightChart.height;
-  const padding = 50;
+  const w = bodyweightChart.width;
+  const h = bodyweightChart.height;
+  const p = 50;
 
-  ctx.clearRect(0, 0, width, height);
-  drawAxes(ctx, width, height, padding);
+  ctx.clearRect(0, 0, w, h);
+  drawAxes(ctx, w, h, p);
 
-  const points = [
-    { value: current || goal || 0 },
-    { value: current || goal || 0 },
-    { value: goal || current || 0 }
-  ];
-
-  const maxValue = Math.max(...points.map(point => point.value), 1);
+  const values = [current, current, goal];
+  const max = Math.max(...values, 1);
 
   ctx.strokeStyle = "#6fd3ff";
-  ctx.fillStyle = "#6fd3ff";
-  ctx.lineWidth = 3;
-
   ctx.beginPath();
 
-  points.forEach((point, index) => {
-    const x = padding + ((width - padding * 2) / (points.length - 1)) * index;
-    const y = height - padding - (point.value / maxValue) * (height - padding * 2);
+  values.forEach((v, i) => {
+    const x = p + ((w - p * 2) / (values.length - 1)) * i;
+    const y = h - p - (v / max) * (h - p * 2);
 
-    if (index === 0) {
-      ctx.moveTo(x, y);
-    } else {
-      ctx.lineTo(x, y);
-    }
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
   });
 
   ctx.stroke();
 }
 
-function calculateMacroAverages(entries) {
-  if (!entries.length) {
-    return {
-      protein: 0,
-      carbs: 0,
-      fat: 0,
-      daysLogged: 0
-    };
-  }
-
-  const dailyMap = {};
-
-  entries.forEach(entry => {
-    if (!dailyMap[entry.date]) {
-      dailyMap[entry.date] = {
-        protein: 0,
-        carbs: 0,
-        fat: 0,
-        calories: 0
-      };
-    }
-
-    dailyMap[entry.date].protein += Number(entry.protein_g || 0);
-    dailyMap[entry.date].carbs += Number(entry.carbs_g || 0);
-    dailyMap[entry.date].fat += Number(entry.fat_g || 0);
-    dailyMap[entry.date].calories += Number(entry.calories || 0);
-  });
-
-  const daysLogged = Object.keys(dailyMap).length || 1;
-
-  let totalProtein = 0;
-  let totalCarbs = 0;
-  let totalFat = 0;
-
-  Object.values(dailyMap).forEach(day => {
-    totalProtein += day.protein;
-    totalCarbs += day.carbs;
-    totalFat += day.fat;
-  });
-
-  return {
-    protein: Math.round(totalProtein / daysLogged),
-    carbs: Math.round(totalCarbs / daysLogged),
-    fat: Math.round(totalFat / daysLogged),
-    daysLogged
-  };
-}
-
 function drawMacroChart(entries) {
-  if (!entries.length) {
-    drawEmptyChart(macroChart, "No nutrition log data available.");
-    return;
-  }
+  if (!entries.length)
+    return drawEmptyChart(macroChart, "No nutrition data.");
 
-  const averages = calculateMacroAverages(entries);
+  const daily = {};
+
+  entries.forEach(e => {
+    if (!daily[e.date]) daily[e.date] = { protein: 0, carbs: 0, fat: 0 };
+    daily[e.date].protein += e.protein_g || 0;
+    daily[e.date].carbs += e.carbs_g || 0;
+    daily[e.date].fat += e.fat_g || 0;
+  });
+
+  const days = Object.keys(daily).length || 1;
+
+  const avg = {
+    protein: Object.values(daily).reduce((s, d) => s + d.protein, 0) / days,
+    carbs: Object.values(daily).reduce((s, d) => s + d.carbs, 0) / days,
+    fat: Object.values(daily).reduce((s, d) => s + d.fat, 0) / days
+  };
 
   const ctx = macroChart.getContext("2d");
   resizeCanvas(macroChart);
 
-  const width = macroChart.width;
-  const height = macroChart.height;
-  const padding = 50;
+  const w = macroChart.width;
+  const h = macroChart.height;
+  const p = 50;
 
-  ctx.clearRect(0, 0, width, height);
-  drawAxes(ctx, width, height, padding);
+  ctx.clearRect(0, 0, w, h);
+  drawAxes(ctx, w, h, p);
 
   const values = [
-    { label: "Protein", value: averages.protein, color: "#7b7f87" },
-    { label: "Carbs", value: averages.carbs, color: "#a8adb8" },
-    { label: "Fat", value: averages.fat, color: "#d8dbe2" }
+    { label: "Protein", value: avg.protein },
+    { label: "Carbs", value: avg.carbs },
+    { label: "Fat", value: avg.fat }
   ];
 
-  const maxValue = Math.max(...values.map(item => item.value), 1);
-  const barWidth = 80;
+  const max = Math.max(...values.map(v => v.value), 1);
+  const barW = 80;
   const gap = 50;
-  const startX = (width - (values.length * barWidth + (values.length - 1) * gap)) / 2;
 
-  values.forEach((item, index) => {
-    const x = startX + index * (barWidth + gap);
-    const barHeight = (item.value / maxValue) * (height - padding * 2);
-    const y = height - padding - barHeight;
+  const startX = (w - (values.length * barW + (values.length - 1) * gap)) / 2;
 
-    ctx.fillStyle = item.color;
-    ctx.fillRect(x, y, barWidth, barHeight);
+  values.forEach((v, i) => {
+    const x = startX + i * (barW + gap);
+    const barH = (v.value / max) * (h - p * 2);
+    const y = h - p - barH;
 
-    ctx.fillStyle = "#dbe2ea";
-    ctx.font = "14px Inter";
-    ctx.textAlign = "center";
-    ctx.fillText(item.label, x + barWidth / 2, height - 20);
+    ctx.fillStyle = "#b7ff3c";
+    ctx.fillRect(x, y, barW, barH);
   });
 }
 
-function calculateCurrentStreak(workouts) {
-  if (!workouts.length) return 0;
-
-  const workoutDays = [...new Set(
-    workouts.map(workout => new Date(workout.date).toDateString())
-  )];
+/* =========================
+   STATS
+========================= */
+function calculateStreak(workouts) {
+  const days = [...new Set(workouts.map(w => new Date(w.date).toDateString()))];
 
   let streak = 0;
-  const currentDate = new Date();
+  const d = new Date();
 
   for (let i = 0; i < 365; i++) {
-    const dateString = currentDate.toDateString();
-
-    if (workoutDays.includes(dateString)) {
+    if (days.includes(d.toDateString())) {
       streak++;
-      currentDate.setDate(currentDate.getDate() - 1);
-    } else if (streak > 0) {
-      break;
-    } else {
-      currentDate.setDate(currentDate.getDate() - 1);
-    }
+      d.setDate(d.getDate() - 1);
+    } else if (streak > 0) break;
+    else d.setDate(d.getDate() - 1);
   }
 
   return streak;
 }
 
 function calculateAvgCalories(entries) {
-  if (!entries.length) return 0;
+  const map = {};
 
-  const dailyMap = {};
-
-  entries.forEach(entry => {
-    if (!dailyMap[entry.date]) {
-      dailyMap[entry.date] = 0;
-    }
-
-    dailyMap[entry.date] += Number(entry.calories || 0);
+  entries.forEach(e => {
+    map[e.date] = (map[e.date] || 0) + (e.calories || 0);
   });
 
-  const daysLogged = Object.keys(dailyMap).length || 1;
-  const totalCalories = Object.values(dailyMap).reduce((sum, value) => sum + value, 0);
-
-  return Math.round(totalCalories / daysLogged);
+  const days = Object.keys(map).length || 1;
+  return Math.round(Object.values(map).reduce((s, v) => s + v, 0) / days);
 }
 
-function calculateAdaptiveGoals(profile) {
-  const currentWeight = Number(profile.currentWeight || 0);
-  const goalWeight = Number(profile.goalWeight || 0);
-  const fitnessGoal = String(profile.fitnessGoal || "").toLowerCase();
+function calculateGoals(profile) {
+  const w = Number(profile.currentWeight || 0);
 
-  const fallbackCalories = 2200;
-  const fallbackProtein = 140;
-  const fallbackCarbs = 220;
-  const fallbackFat = 70;
-
-  if (!currentWeight) {
-    return {
-      calories: fallbackCalories,
-      protein: fallbackProtein,
-      carbs: fallbackCarbs,
-      fat: fallbackFat
-    };
-  }
-
-  let caloriesTarget = currentWeight * 15;
-  let proteinTarget = currentWeight * 0.8;
-  let carbsTarget = currentWeight * 1.0;
-  let fatTarget = currentWeight * 0.3;
-
-  if (fitnessGoal === "lose weight") {
-    caloriesTarget = currentWeight * 12;
-    proteinTarget = currentWeight * 0.9;
-    carbsTarget = currentWeight * 0.7;
-    fatTarget = currentWeight * 0.3;
-  } else if (fitnessGoal === "gain muscle") {
-    caloriesTarget = currentWeight * 17;
-    proteinTarget = currentWeight * 1.0;
-    carbsTarget = currentWeight * 1.5;
-    fatTarget = currentWeight * 0.35;
-  } else if (fitnessGoal === "improve endurance") {
-    caloriesTarget = currentWeight * 16;
-    proteinTarget = currentWeight * 0.8;
-    carbsTarget = currentWeight * 1.6;
-    fatTarget = currentWeight * 0.3;
-  } else if (fitnessGoal === "maintain" || fitnessGoal === "general fitness") {
-    caloriesTarget = currentWeight * 15;
-    proteinTarget = currentWeight * 0.85;
-    carbsTarget = currentWeight * 1.1;
-    fatTarget = currentWeight * 0.32;
-  }
-
-  if (goalWeight && fitnessGoal === "lose weight" && goalWeight < currentWeight) {
-    caloriesTarget -= 100;
-  }
-
-  if (goalWeight && fitnessGoal === "gain muscle" && goalWeight > currentWeight) {
-    caloriesTarget += 100;
-  }
+  if (!w) return { calories: 2200, protein: 140, carbs: 220, fat: 70 };
 
   return {
-    calories: Math.round(caloriesTarget),
-    protein: Math.round(proteinTarget),
-    carbs: Math.round(carbsTarget),
-    fat: Math.round(fatTarget)
+    calories: Math.round(w * 15),
+    protein: Math.round(w * 0.8),
+    carbs: Math.round(w * 1.1),
+    fat: Math.round(w * 0.3)
   };
 }
 
-function updateDailyTargets(profile) {
-  const goals = calculateAdaptiveGoals(profile);
-
-  if (targetCaloriesStat) targetCaloriesStat.textContent = goals.calories;
-  if (targetProteinStat) targetProteinStat.textContent = `${goals.protein} g`;
-  if (targetCarbsStat) targetCarbsStat.textContent = `${goals.carbs} g`;
-  if (targetFatStat) targetFatStat.textContent = `${goals.fat} g`;
-}
-
-function updateSummaryStats(workouts, nutritionEntries) {
-  totalWorkoutsStat.textContent = workouts.length;
-  avgCaloriesStat.textContent = calculateAvgCalories(nutritionEntries);
-  currentStreakStat.textContent = calculateCurrentStreak(workouts);
-}
-
-function renderProgressPage() {
-  const workouts = filterWorkoutsByRange(getSavedWorkouts(), selectedRangeDays);
-  const nutritionEntries = filterNutritionByRange(getDailyNutritionLog(), selectedRangeDays);
+/* =========================
+   RENDER
+========================= */
+function render() {
+  const workouts = filterByRange(getSavedWorkouts(), selectedRangeDays);
+  const nutrition = filterByRange(getNutritionLog(), selectedRangeDays);
   const profile = getProfile();
 
   drawStrengthChart(workouts);
   drawBodyweightChart(profile);
-  drawMacroChart(nutritionEntries);
-  updateSummaryStats(workouts, nutritionEntries);
-  updateDailyTargets(profile);
+  drawMacroChart(nutrition);
+
+  totalWorkoutsStat.textContent = workouts.length;
+  avgCaloriesStat.textContent = calculateAvgCalories(nutrition);
+  currentStreakStat.textContent = calculateStreak(workouts);
+
+  const goals = calculateGoals(profile);
+
+  targetCaloriesStat.textContent = goals.calories;
+  targetProteinStat.textContent = `${goals.protein} g`;
+  targetCarbsStat.textContent = `${goals.carbs} g`;
+  targetFatStat.textContent = `${goals.fat} g`;
 }
 
-filterButtons.forEach(button => {
-  button.addEventListener("click", function () {
-    filterButtons.forEach(btn => btn.classList.remove("active-filter"));
-    this.classList.add("active-filter");
+/* =========================
+   EVENTS
+========================= */
+filterButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    filterButtons.forEach(b => b.classList.remove("active-filter"));
+    btn.classList.add("active-filter");
 
-    selectedRangeDays = Number(this.dataset.range);
-    renderProgressPage();
+    selectedRangeDays = Number(btn.dataset.range);
+    render();
   });
 });
 
-logoutBtn.addEventListener("click", logoutPageUser);
-window.addEventListener("resize", renderProgressPage);
+logoutBtn?.addEventListener("click", logoutUser);
+window.addEventListener("resize", render);
 
+/* =========================
+   INIT
+========================= */
 protectPage();
 updateUserStatus();
-renderProgressPage();
+render();

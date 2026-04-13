@@ -1,5 +1,5 @@
 /* =========================
-   1. GLOBAL
+   1. RESET / GLOBAL
 ========================= */
 * {
   box-sizing: border-box;
@@ -29,6 +29,19 @@ img {
   display: block;
 }
 
+.hidden {
+  display: none;
+}
+
+.clickable-user {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.clickable-user:hover {
+  opacity: 0.8;
+}
+
 /* =========================
    2. LAYOUT HELPERS
 ========================= */
@@ -48,9 +61,13 @@ img {
   margin-bottom: 25px;
 }
 
+.section-header h2,
+.section-header h3 {
+  margin-bottom: 8px;
+}
+
 .section-header h2 {
   font-size: 2rem;
-  margin-bottom: 8px;
 }
 
 .section-header p {
@@ -68,18 +85,18 @@ img {
   margin-bottom: 10px;
 }
 
-.subtitle {
+.subtitle,
+.muted-text,
+.empty-state {
   color: #9aa4b2;
+}
+
+.subtitle {
   max-width: 600px;
   margin-bottom: 25px;
 }
 
-.muted-text {
-  color: #9aa4b2;
-}
-
 .empty-state {
-  color: #9aa4b2;
   padding: 10px 0;
 }
 
@@ -102,10 +119,20 @@ img {
 }
 
 .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 1.3rem;
   font-weight: 800;
   color: #b7ff3c;
   white-space: nowrap;
+}
+
+.logo-img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  border-radius: 8px;
 }
 
 .navbar nav {
@@ -145,6 +172,8 @@ img {
   cursor: pointer;
   display: inline-block;
   transition: 0.2s ease;
+  font-family: inherit;
+  font-size: 0.95rem;
 }
 
 .btn-primary {
@@ -169,52 +198,37 @@ img {
 }
 
 /* =========================
-   5. HERO SECTION
+   5. INPUTS / FORMS
 ========================= */
-.hero {
-  min-height: 80vh;
-  display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  gap: 30px;
-  align-items: center;
-  padding: 60px 40px;
+.search-input,
+.auth-form input,
+.workout-input-grid input {
+  width: 100%;
+  min-width: 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #2a3441;
+  background: #0b0f14;
+  color: #f5f7fa;
+  font-size: 1rem;
+  font-family: inherit;
 }
 
-.hero h1 {
-  font-size: 3rem;
-  line-height: 1.1;
-  margin-bottom: 20px;
+.auth-form input:focus,
+.search-input:focus,
+.workout-input-grid input:focus {
+  outline: none;
+  border-color: #b7ff3c;
 }
 
-.hero-actions {
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
-.hero-card {
-  background: #121923;
-  border: 1px solid #233041;
-  border-radius: 20px;
-  padding: 25px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-}
-
-.hero-card h3 {
-  margin-bottom: 20px;
+.form-message {
+  min-height: 22px;
   color: #b7ff3c;
-}
-
-.preview-item {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #1f2937;
+  font-size: 0.95rem;
 }
 
 /* =========================
-   6. CARDS / GRIDS
+   6. GENERIC CARDS / GRIDS
 ========================= */
 .card-grid {
   display: grid;
@@ -229,7 +243,17 @@ img {
 .body-card,
 .saved-workout-card,
 .workout-item-card,
-.auth-card {
+.auth-card,
+.profile-section-card,
+.progress-card,
+.nutrition-search-card,
+.landing-hero-card,
+.landing-info-card,
+.landing-feature-card,
+.landing-step-card,
+.landing-cta-card,
+.recipe-card,
+.recipe-modal-content {
   background: #121923;
   border: 1px solid #233041;
   border-radius: 18px;
@@ -241,7 +265,10 @@ img {
 .timer-card,
 .body-card,
 .saved-workout-card,
-.workout-item-card {
+.workout-item-card,
+.profile-section-card,
+.progress-card,
+.nutrition-search-card {
   padding: 20px;
 }
 
@@ -249,7 +276,8 @@ img {
   transition: transform 0.2s ease;
 }
 
-.card:hover {
+.card:hover,
+.recipe-card:hover {
   transform: translateY(-4px);
 }
 
@@ -288,6 +316,7 @@ img {
 .summary-row {
   display: flex;
   justify-content: space-between;
+  gap: 12px;
   padding: 14px 0;
   border-bottom: 1px solid #1f2937;
 }
@@ -323,8 +352,8 @@ img {
 
 .auth-card {
   padding: 30px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 }
 
 .auth-tabs {
@@ -342,6 +371,7 @@ img {
   color: #f5f7fa;
   font-weight: 700;
   cursor: pointer;
+  font-family: inherit;
 }
 
 .active-tab {
@@ -364,35 +394,9 @@ img {
   color: #dbe2ea;
 }
 
-.auth-form input {
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: 1px solid #2a3441;
-  background: #0b0f14;
-  color: #f5f7fa;
-  font-size: 1rem;
-}
-
-.auth-form input:focus,
-.search-input:focus,
-.workout-input-grid input:focus {
-  outline: none;
-  border-color: #b7ff3c;
-}
-
 .auth-submit {
   margin-top: 10px;
   width: 100%;
-}
-
-.form-message {
-  min-height: 22px;
-  color: #b7ff3c;
-  font-size: 0.95rem;
-}
-
-.hidden {
-  display: none;
 }
 
 /* =========================
@@ -445,17 +449,6 @@ img {
   margin-bottom: 24px;
 }
 
-.search-input {
-  width: 100%;
-  min-width: 0;
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: 1px solid #2a3441;
-  background: #0b0f14;
-  color: #f5f7fa;
-  font-size: 1rem;
-}
-
 .exercise-image {
   width: 100%;
   height: 180px;
@@ -493,15 +486,6 @@ img {
   color: #dbe2ea;
 }
 
-.workout-input-grid input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #2a3441;
-  background: #0b0f14;
-  color: #f5f7fa;
-}
-
 .saved-exercise-list {
   margin-top: 16px;
   display: grid;
@@ -509,86 +493,9 @@ img {
 }
 
 /* =========================
-   10. FOOTER
-========================= */
-.footer {
-  text-align: center;
-  padding: 25px;
-  border-top: 1px solid #1f2937;
-  color: #9aa4b2;
-}
-
-/* =========================
-   11. RESPONSIVE
-========================= */
-@media (max-width: 1000px) {
-  .workouts-top-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .exercise-search-row {
-    grid-template-columns: 1fr;
-  }
-
-  .workout-input-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .saved-exercise-row,
-  .workout-item-top,
-  .saved-workout-header {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 900px) {
-  .navbar {
-    flex-direction: column;
-    gap: 15px;
-    padding: 20px;
-  }
-
-  .navbar nav {
-    justify-content: center;
-  }
-
-  .nav-actions {
-    flex-direction: column;
-  }
-
-  .hero {
-    grid-template-columns: 1fr;
-    padding: 40px 20px;
-  }
-
-  .hero h1,
-  .auth-intro h1 {
-    font-size: 2.2rem;
-  }
-
-  .section {
-    padding: 40px 0;
-  }
-
-  .page-hero {
-    padding: 40px 0 10px;
-  }
-
-  .auth-wrapper {
-    grid-template-columns: 1fr;
-  }
-
-  .page-main {
-    padding: 0 16px 32px;
-  }
-}
-
-/* =========================
-   12. PROFILE PAGE
+   10. PROFILE PAGE
 ========================= */
 .profile-section-card {
-  background: #121923;
-  border: 1px solid #233041;
   border-radius: 20px;
   padding: 24px;
 }
@@ -734,27 +641,8 @@ img {
   transform: translateX(26px);
 }
 
-@media (max-width: 900px) {
-  .profile-info-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .profile-two-col {
-    grid-template-columns: 1fr;
-  }
-
-  .preference-item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .preference-select {
-    width: 100%;
-  }
-}
-
 /* =========================
-   13. PROGRESS PAGE
+   11. PROGRESS PAGE
 ========================= */
 .progress-filter-bar {
   display: flex;
@@ -770,6 +658,7 @@ img {
   color: #f5f7fa;
   font-weight: 700;
   cursor: pointer;
+  font-family: inherit;
 }
 
 .active-filter {
@@ -778,8 +667,6 @@ img {
 }
 
 .progress-card {
-  background: #121923;
-  border: 1px solid #233041;
   border-radius: 20px;
   padding: 24px;
 }
@@ -850,18 +737,10 @@ img {
   color: #9aa4b2;
 }
 
-@media (max-width: 900px) {
-  .progress-stats-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* =========================
-   14. NUTRITION PAGE
+   12. NUTRITION PAGE
 ========================= */
 .nutrition-search-card {
-  background: #121923;
-  border: 1px solid #233041;
   border-radius: 20px;
   padding: 24px;
 }
@@ -871,6 +750,17 @@ img {
   grid-template-columns: 1fr 140px;
   gap: 16px;
   margin-bottom: 18px;
+}
+
+.filter-dropdown {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #233041;
+  border-radius: 14px;
+  background: #0b0f14;
 }
 
 .chip-row {
@@ -887,6 +777,7 @@ img {
   color: #f5f7fa;
   font-weight: 600;
   cursor: pointer;
+  font-family: inherit;
 }
 
 .active-chip {
@@ -901,22 +792,18 @@ img {
 }
 
 .recipe-card {
-  background: #121923;
-  border: 1px solid #233041;
-  border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
 
-.recipe-card:hover {
-  transform: translateY(-4px);
-}
-
-.recipe-image-placeholder,
-.recipe-detail-image {
+.recipe-image,
+.recipe-detail-image,
+.recipe-image-placeholder {
   width: 100%;
   height: 220px;
+  object-fit: cover;
+  display: block;
   background: linear-gradient(135deg, #1a2330, #10161f);
 }
 
@@ -931,14 +818,6 @@ img {
 .recipe-tags {
   color: #9aa4b2;
   margin-bottom: 14px;
-}
-
-.recipe-macro-preview {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  color: #dbe2ea;
-  font-weight: 600;
 }
 
 .pagination-row {
@@ -957,6 +836,7 @@ img {
   color: #f5f7fa;
   font-weight: 700;
   cursor: pointer;
+  font-family: inherit;
 }
 
 .active-page {
@@ -981,9 +861,6 @@ img {
 .recipe-modal-content {
   width: 100%;
   max-width: 700px;
-  background: #121923;
-  border: 1px solid #233041;
-  border-radius: 20px;
   padding: 28px;
   position: relative;
   max-height: 90vh;
@@ -1027,37 +904,23 @@ img {
   color: #9aa4b2;
 }
 
-.recipe-detail-text {
+.recipe-ingredients-list {
+  margin-top: 10px;
+  padding-left: 20px;
   color: #dbe2ea;
 }
 
-@media (max-width: 1000px) {
-  .nutrition-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 700px) {
-  .nutrition-search-row {
-    grid-template-columns: 1fr;
-  }
-
-  .nutrition-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .recipe-detail-grid {
-    grid-template-columns: 1fr 1fr;
-  }
+.recipe-ingredients-list li {
+  margin-bottom: 6px;
 }
 
 /* =========================
-   15. LANDING PAGE
+   13. LANDING PAGE
 ========================= */
 .landing-main {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 48px 20px 72px;
+  padding: 40px 20px 60px;
 }
 
 .landing-hero-card,
@@ -1065,28 +928,24 @@ img {
 .landing-feature-card,
 .landing-step-card,
 .landing-cta-card {
-  background: #121923;
-  border: 1px solid #233041;
   border-radius: 24px;
 }
 
 .landing-hero-card {
-  padding: 48px;
-  margin-bottom: 28px;
+  padding: 32px;
+  margin-bottom: 24px;
 }
 
 .landing-hero-card h1 {
-  font-size: 3.4rem;
-  line-height: 1.05;
-  margin-bottom: 18px;
-  max-width: 780px;
+  font-size: 2.8rem;
+  line-height: 1.1;
+  margin-bottom: 14px;
 }
 
 .landing-subtitle {
-  max-width: 760px;
+  max-width: 720px;
   color: #9aa4b2;
-  font-size: 1.08rem;
-  margin-bottom: 28px;
+  margin-bottom: 22px;
 }
 
 .landing-actions {
@@ -1106,8 +965,7 @@ img {
   padding: 28px;
 }
 
-.landing-info-card h2 {
-  font-size: 1.8rem;
+.landing-info-card h3 {
   margin-bottom: 12px;
 }
 
@@ -1126,27 +984,28 @@ img {
 }
 
 .landing-feature-card {
-  padding: 24px;
+  overflow: hidden;
 }
 
-.feature-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
+.feature-visual {
+  height: 120px;
   background: #2a3441;
-  margin-bottom: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.8rem;
+  font-size: 2.5rem;
+  border-bottom: 1px solid #233041;
 }
 
-.landing-feature-card h3 {
+.landing-feature-body {
+  padding: 18px 20px;
+}
+
+.landing-feature-body h3 {
   margin-bottom: 10px;
-  font-size: 1.3rem;
 }
 
-.landing-feature-card p {
+.landing-feature-body p {
   color: #9aa4b2;
 }
 
@@ -1157,17 +1016,17 @@ img {
 .landing-steps-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 18px;
 }
 
 .landing-step-card {
-  padding: 24px;
+  padding: 20px;
 }
 
 .step-number {
   display: inline-flex;
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   align-items: center;
   justify-content: center;
@@ -1178,119 +1037,54 @@ img {
 }
 
 .landing-step-card h3 {
-  margin-bottom: 10px;
-}
-
-.landing-step-card p {
-  color: #9aa4b2;
+  font-size: 1rem;
 }
 
 .landing-cta-card {
-  padding: 36px;
-  text-align: center;
+  padding: 28px;
+  text-align: left;
 }
 
 .landing-cta-card h2 {
-  font-size: 2rem;
-  margin-bottom: 12px;
+  margin-bottom: 18px;
 }
 
-.landing-cta-card p {
-  color: #9aa4b2;
-  max-width: 760px;
-  margin: 0 auto 24px;
-}
-
-@media (max-width: 900px) {
-  .landing-hero-card {
-    padding: 30px 24px;
-  }
-
-  .landing-hero-card h1 {
-    font-size: 2.5rem;
-  }
-
-  .landing-info-grid,
-  .landing-features-grid,
-  .landing-steps-grid {
-    grid-template-columns: 1fr;
-  }
-}
-.clickable-user {
-  cursor: pointer;
-  font-weight: 700;
-}
-
-.clickable-user:hover {
-  opacity: 0.8;
-}
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 1.3rem;
-  font-weight: 800;
-  color: #b7ff3c;
-}
-
-.logo-img {
-  width: 34px;
-  height: 34px;
-  object-fit: contain;
-  border-radius: 8px;
-}
-
-.filter-dropdown {
-  margin-top: 12px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-  padding: 16px;
-  border: 1px solid #233041;
-  border-radius: 14px;
-  background: #0b0f14;
-}
-
-.recipe-image {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  display: block;
-}
-/* INSTALL BAR */
-.install-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: #121923;
-  border-top: 1px solid #233041;
-  padding: 12px 20px;
-  display: flex;
-  justify-content: center;
-  z-index: 2000;
-}
-
-.install-btn {
-  width: 100%;
-  max-width: 400px;
-}
-.landing-main {
-  padding-bottom: 80px; /* space for install bar */
-}
 /* =========================
-   LIGHT MODE
+   14. FOOTER
 ========================= */
+.footer {
+  text-align: center;
+  padding: 25px;
+  border-top: 1px solid #1f2937;
+  color: #9aa4b2;
+}
+
+/* =========================
+   15. LIGHT MODE
+========================= */
+html.light-mode body,
 body.light-mode {
   background: #f3f6fb;
   color: #16202b;
 }
 
+html.light-mode body .navbar,
 body.light-mode .navbar {
   background: rgba(243, 246, 251, 0.95);
   border-bottom: 1px solid #d7dee8;
 }
 
+html.light-mode body .navbar nav a,
+html.light-mode body .user-status,
+html.light-mode body .subtitle,
+html.light-mode body .muted-text,
+html.light-mode body .section-header p,
+html.light-mode body .card p,
+html.light-mode body .progress-stat-box p,
+html.light-mode body .recipe-tags,
+html.light-mode body .landing-info-card p,
+html.light-mode body .landing-feature-body p,
+html.light-mode body .landing-cta-card p,
 body.light-mode .navbar nav a,
 body.light-mode .user-status,
 body.light-mode .subtitle,
@@ -1300,12 +1094,29 @@ body.light-mode .card p,
 body.light-mode .progress-stat-box p,
 body.light-mode .recipe-tags,
 body.light-mode .landing-info-card p,
-body.light-mode .landing-feature-card p,
-body.light-mode .landing-step-card p,
+body.light-mode .landing-feature-body p,
 body.light-mode .landing-cta-card p {
   color: #4c5b6b;
 }
 
+html.light-mode body .card,
+html.light-mode body .stat-card,
+html.light-mode body .summary-card,
+html.light-mode body .timer-card,
+html.light-mode body .body-card,
+html.light-mode body .saved-workout-card,
+html.light-mode body .workout-item-card,
+html.light-mode body .auth-card,
+html.light-mode body .profile-section-card,
+html.light-mode body .progress-card,
+html.light-mode body .nutrition-search-card,
+html.light-mode body .landing-hero-card,
+html.light-mode body .landing-info-card,
+html.light-mode body .landing-feature-card,
+html.light-mode body .landing-step-card,
+html.light-mode body .landing-cta-card,
+html.light-mode body .recipe-card,
+html.light-mode body .recipe-modal-content,
 body.light-mode .card,
 body.light-mode .stat-card,
 body.light-mode .summary-card,
@@ -1325,42 +1136,179 @@ body.light-mode .landing-cta-card,
 body.light-mode .recipe-card,
 body.light-mode .recipe-modal-content {
   background: #ffffff;
-  border: 1px solid #d7dee8;
+  border-color: #d7dee8;
 }
 
+html.light-mode body .search-input,
+html.light-mode body .auth-form input,
+html.light-mode body .workout-input-grid input,
+html.light-mode body .preference-item,
+html.light-mode body .progress-chart,
+html.light-mode body .recipe-detail-stat,
+html.light-mode body .progress-stat-box,
+html.light-mode body .avatar-circle,
+html.light-mode body .tab-btn,
+html.light-mode body .chip-btn,
+html.light-mode body .pagination-btn,
+html.light-mode body .btn-secondary,
+html.light-mode body .filter-dropdown,
+html.light-mode body .body-image,
 body.light-mode .search-input,
-body.light-mode .workout-input-grid input,
 body.light-mode .auth-form input,
+body.light-mode .workout-input-grid input,
 body.light-mode .preference-item,
 body.light-mode .progress-chart,
 body.light-mode .recipe-detail-stat,
-body.light-mode .recipe-image-placeholder,
-body.light-mode .recipe-detail-image,
 body.light-mode .progress-stat-box,
 body.light-mode .avatar-circle,
 body.light-mode .tab-btn,
 body.light-mode .chip-btn,
 body.light-mode .pagination-btn,
 body.light-mode .btn-secondary,
-body.light-mode .filter-dropdown {
+body.light-mode .filter-dropdown,
+body.light-mode .body-image {
   background: #f8fafc;
   color: #16202b;
   border-color: #d7dee8;
 }
 
+html.light-mode body .footer,
 body.light-mode .footer {
   border-top: 1px solid #d7dee8;
   color: #4c5b6b;
 }
 
+html.light-mode body .logo,
 body.light-mode .logo {
   color: #7aa800;
 }
 
+html.light-mode body .btn-primary,
+html.light-mode body .active-tab,
+html.light-mode body .active-chip,
+html.light-mode body .active-filter,
+html.light-mode body .active-page,
 body.light-mode .btn-primary,
 body.light-mode .active-tab,
 body.light-mode .active-chip,
 body.light-mode .active-filter,
 body.light-mode .active-page {
   color: #16202b;
+}
+
+html.light-mode body .feature-visual,
+body.light-mode .feature-visual {
+  background: #e8eef5;
+  border-bottom-color: #d7dee8;
+}
+
+html.light-mode body .recipe-ingredients-list,
+body.light-mode .recipe-ingredients-list {
+  color: #324252;
+}
+
+/* =========================
+   16. RESPONSIVE
+========================= */
+@media (max-width: 1000px) {
+  .workouts-top-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .exercise-search-row {
+    grid-template-columns: 1fr;
+  }
+
+  .workout-input-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .saved-exercise-row,
+  .workout-item-top,
+  .saved-workout-header {
+    flex-direction: column;
+  }
+
+  .nutrition-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .navbar {
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+  }
+
+  .navbar nav {
+    justify-content: center;
+  }
+
+  .nav-actions {
+    flex-direction: column;
+  }
+
+  .section {
+    padding: 40px 0;
+  }
+
+  .page-hero {
+    padding: 40px 0 10px;
+  }
+
+  .auth-wrapper,
+  .profile-info-layout,
+  .profile-two-col,
+  .progress-stats-grid,
+  .landing-info-grid,
+  .landing-features-grid,
+  .landing-steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1,
+  .auth-intro h1 {
+    font-size: 2.2rem;
+  }
+
+  .landing-hero-card {
+    padding: 30px 24px;
+  }
+
+  .landing-hero-card h1 {
+    font-size: 2.2rem;
+  }
+
+  .preference-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .preference-select {
+    width: 100%;
+  }
+
+  .page-main {
+    padding: 0 16px 32px;
+  }
+}
+
+@media (max-width: 700px) {
+  .nutrition-search-row {
+    grid-template-columns: 1fr;
+  }
+
+  .nutrition-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recipe-detail-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .summary-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

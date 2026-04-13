@@ -1,29 +1,29 @@
-/* Get all users from localStorage */
+/* =========================
+   STORAGE HELPERS
+========================= */
 function getUsers() {
   return JSON.parse(localStorage.getItem("users")) || [];
 }
 
-/* Save all users to localStorage */
 function saveUsers(users) {
   localStorage.setItem("users", JSON.stringify(users));
 }
 
-/* Get current logged-in user */
 function getCurrentUser() {
   return JSON.parse(localStorage.getItem("currentUser"));
 }
 
-/* Save current logged-in user */
 function setCurrentUser(user) {
   localStorage.setItem("currentUser", JSON.stringify(user));
 }
 
-/* Clear current logged-in user */
 function clearCurrentUser() {
   localStorage.removeItem("currentUser");
 }
 
-/* Login existing user */
+/* =========================
+   AUTH LOGIC
+========================= */
 function loginUser(identifier, password) {
   const users = getUsers();
 
@@ -52,7 +52,6 @@ function loginUser(identifier, password) {
   };
 }
 
-/* Sign up new user */
 function signupUser(username, email, password) {
   const users = getUsers();
 
@@ -93,13 +92,11 @@ function signupUser(username, email, password) {
   };
 }
 
-/* Logout user */
 function logoutUser() {
   clearCurrentUser();
   window.location.href = "../index.html";
 }
 
-/* Protect logged-in pages */
 function protectPage() {
   const currentUser = getCurrentUser();
 
@@ -109,7 +106,27 @@ function protectPage() {
   }
 }
 
-/* Update homepage login button */
+/* =========================
+   THEME
+========================= */
+function applySavedTheme() {
+  const user = getCurrentUser();
+
+  document.body.classList.remove("light-mode");
+
+  if (!user) return;
+
+  const preferencesKey = `preferences_${user.username}`;
+  const preferences = JSON.parse(localStorage.getItem(preferencesKey)) || {};
+
+  if (preferences.theme === "light") {
+    document.body.classList.add("light-mode");
+  }
+}
+
+/* =========================
+   NAVBAR HELPERS
+========================= */
 function updateAuthButton() {
   const loginBtn = document.getElementById("loginBtn");
   if (!loginBtn) return;
@@ -119,14 +136,12 @@ function updateAuthButton() {
   if (currentUser) {
     loginBtn.textContent = currentUser.username;
     loginBtn.classList.add("clickable-user");
-
     loginBtn.onclick = function () {
-      window.location.href = "pages/profile.html"; // 🔥 change here
+      window.location.href = "pages/profile.html";
     };
   } else {
     loginBtn.textContent = "Login";
     loginBtn.classList.remove("clickable-user");
-
     loginBtn.onclick = function () {
       window.location.href = "pages/auth.html";
     };
@@ -135,7 +150,6 @@ function updateAuthButton() {
 
 function updateNavbarForPages() {
   const currentUser = getCurrentUser();
-
   const userStatus = document.getElementById("userStatus");
   const logoutBtn = document.getElementById("logoutBtn");
 
@@ -143,13 +157,13 @@ function updateNavbarForPages() {
     if (currentUser) {
       userStatus.textContent = currentUser.username;
       userStatus.classList.add("clickable-user");
-
       userStatus.onclick = function () {
         window.location.href = "profile.html";
       };
     } else {
       userStatus.textContent = "Guest";
       userStatus.classList.remove("clickable-user");
+      userStatus.onclick = null;
     }
   }
 
@@ -158,7 +172,9 @@ function updateNavbarForPages() {
   }
 }
 
-/* Wire up login/signup page */
+/* =========================
+   AUTH PAGE SETUP
+========================= */
 function setupAuthPage() {
   const loginForm = document.getElementById("loginForm");
   const signupForm = document.getElementById("signupForm");
@@ -228,28 +244,13 @@ function setupAuthPage() {
     }
   });
 }
-function getCurrentUser() {
-  return JSON.parse(localStorage.getItem("currentUser"));
-}
 
-function applySavedTheme() {
-  const user = getCurrentUser();
-
-  document.body.classList.remove("light-mode");
-
-  if (!user) return;
-
-  const preferencesKey = `preferences_${user.username}`;
-  const preferences = JSON.parse(localStorage.getItem(preferencesKey)) || {};
-
-  if (preferences.theme === "light") {
-    document.body.classList.add("light-mode");
-  }
-}
-
-document.addEventListener("DOMContentLoaded", applySavedTheme);
-
+/* =========================
+   INIT
+========================= */
 document.addEventListener("DOMContentLoaded", function () {
+  applySavedTheme();
   updateAuthButton();
+  updateNavbarForPages();
   setupAuthPage();
 });

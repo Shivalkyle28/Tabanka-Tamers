@@ -13,7 +13,6 @@ const notificationsToggle = document.getElementById("notificationsToggle");
 const themePreference = document.getElementById("themePreference");
 
 const avatarPreview = document.getElementById("avatarPreview");
-const avatarInitial = document.getElementById("avatarInitial");
 const uploadPhotoBtn = document.getElementById("uploadPhotoBtn");
 const photoInput = document.getElementById("photoInput");
 
@@ -64,9 +63,11 @@ function updateUserStatus() {
 
 function applyTheme(theme) {
   document.body.classList.remove("light-mode");
+  document.documentElement.classList.remove("light-mode");
 
   if (theme === "light") {
     document.body.classList.add("light-mode");
+    document.documentElement.classList.add("light-mode");
   }
 }
 

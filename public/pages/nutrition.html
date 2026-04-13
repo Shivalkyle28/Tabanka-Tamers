@@ -12,6 +12,20 @@
   />
 </head>
 <body>
+  <script>
+    (function () {
+      const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      if (!currentUser) return;
+
+      const preferencesKey = `preferences_${currentUser.username}`;
+      const preferences = JSON.parse(localStorage.getItem(preferencesKey)) || {};
+
+      if (preferences.theme === "light") {
+        document.body.classList.add("light-mode");
+      }
+    })();
+  </script>
+
   <header class="navbar">
     <div class="logo">
       <img src="../assets/images/logo.png" alt="Tabanka Tamers logo" class="logo-img" />
@@ -38,8 +52,9 @@
       <p class="tag">Fuel smarter</p>
       <h1>Nutrition & Recipes</h1>
       <p class="subtitle">
-        Search, filter, and explore Caribbean meals. Guests can browse freely,
-        while nutrition stats and tracking are available after login.
+        Search, filter, and explore Caribbean meals with serving sizes, ingredients,
+        and full nutrition facts. Logged-in users can also save favorites and add meals
+        to their daily nutrition log.
       </p>
     </section>
 
