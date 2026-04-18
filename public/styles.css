@@ -1050,7 +1050,246 @@ img {
 }
 
 /* =========================
-   14. FOOTER
+   14. GAMIFICATION SYSTEM
+========================= */
+.gamification-banner {
+  background: #121923;
+  border: 1px solid #233041;
+  border-radius: 18px;
+  padding: 20px;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.progress-wrapper {
+  flex-grow: 1;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.progress-bar-bg {
+  height: 10px;
+  background: #0b0f14;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff4d4d, #f9cb28);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 0%;
+}
+
+.stat-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #9aa4b2;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  color: #f9cb28;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+#reward-toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #121923;
+  color: white;
+  padding: 18px 25px;
+  border-radius: 16px;
+  border: 1px solid #233041;
+  border-left: 5px solid #b7ff3c;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transform: translateX(150%);
+  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  z-index: 2000;
+}
+
+#reward-toast.show {
+  transform: translateX(0);
+}
+
+.toast-icon {
+  font-size: 1.5rem;
+}
+
+.toast-body h4 {
+  margin: 0;
+  color: #b7ff3c;
+  font-size: 1rem;
+}
+
+.toast-body p {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  color: #9aa4b2;
+}
+
+/* =========================
+   15. PROFILE ACHIEVEMENTS & RANKS
+========================= */
+.rank-status-banner {
+  background: #121923;
+  border: 1px solid #b7ff3c;
+  padding: 24px;
+  border-radius: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 24px rgba(183, 255, 60, 0.05);
+}
+
+.rank-main {
+  min-width: 140px;
+}
+
+.rank-progress {
+  flex-grow: 1;
+}
+
+.rank-main h2 {
+  color: #f9cb28;
+  font-size: 2rem;
+  font-weight: 800;
+  margin-top: 4px;
+}
+
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.achievement-card {
+  background: #0b0f14;
+  border: 1px solid #233041;
+  padding: 18px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.3s ease;
+}
+
+.achievement-card.earned {
+  border-color: #b7ff3c;
+  background: rgba(183, 255, 60, 0.02);
+}
+
+.achievement-card.locked {
+  opacity: 0.4;
+  filter: grayscale(1);
+  border-style: dashed;
+}
+
+.ach-icon {
+  font-size: 2.2rem;
+  background: #121923;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+
+.ach-info h4 {
+  font-size: 1rem;
+  margin-bottom: 2px;
+  color: #f5f7fa;
+}
+
+.ach-info p {
+  font-size: 0.8rem;
+  color: #9aa4b2;
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* =========================
+   16. DASHBOARD ACCORDIONS
+========================= */
+.workout-accordion {
+  margin-bottom: 12px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #233041;
+}
+
+.accordion-header {
+  background: #121923;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.accordion-header:hover {
+  background: #1a2330;
+}
+
+.accordion-header.active {
+  border-bottom: 1px solid #233041;
+  background: #1a2330;
+}
+
+.header-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lime-tag {
+  font-size: 0.8rem;
+  color: #b7ff3c;
+  font-weight: 700;
+}
+
+.toggle-icon {
+  font-size: 1.2rem;
+  color: #9aa4b2;
+  font-weight: 800;
+}
+
+.accordion-content {
+  background: #0b0f14;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, padding 0.3s ease;
+}
+
+.accordion-content.active {
+  max-height: 1000px;
+  padding: 20px;
+}
+
+/* =========================
+   17. FOOTER
 ========================= */
 .footer {
   text-align: center;
@@ -1060,7 +1299,7 @@ img {
 }
 
 /* =========================
-   15. LIGHT MODE
+   18. LIGHT MODE
 ========================= */
 html.light-mode body,
 body.light-mode {
@@ -1172,6 +1411,59 @@ body.light-mode .body-image {
   border-color: #d7dee8;
 }
 
+html.light-mode body .gamification-banner,
+body.light-mode .gamification-banner {
+  background: #ffffff;
+  border-color: #d7dee8;
+}
+
+html.light-mode body .progress-bar-bg,
+body.light-mode .progress-bar-bg {
+  background: #e8eef5;
+}
+
+html.light-mode body #reward-toast,
+body.light-mode #reward-toast {
+  background: #ffffff;
+  color: #16202b;
+  border-color: #d7dee8;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+html.light-mode body .rank-status-banner,
+body.light-mode .rank-status-banner {
+  background: #ffffff;
+  border-color: #7aa800;
+}
+
+html.light-mode body .achievement-card,
+body.light-mode .achievement-card {
+  background: #f8fafc;
+  border-color: #d7dee8;
+}
+
+html.light-mode body .achievement-card.earned,
+body.light-mode .achievement-card.earned {
+  border-color: #7aa800;
+  background: rgba(122, 168, 0, 0.05);
+}
+
+html.light-mode body .accordion-header,
+body.light-mode .accordion-header {
+  background: #ffffff;
+  border-color: #d7dee8;
+}
+
+html.light-mode body .accordion-header:hover {
+  background: #f8fafc;
+}
+
+html.light-mode body .accordion-content,
+body.light-mode .accordion-content {
+  background: #f8fafc;
+  border-color: #d7dee8;
+}
+
 html.light-mode body .footer,
 body.light-mode .footer {
   border-top: 1px solid #d7dee8;
@@ -1208,7 +1500,7 @@ body.light-mode .recipe-ingredients-list {
 }
 
 /* =========================
-   16. RESPONSIVE
+   19. RESPONSIVE
 ========================= */
 @media (max-width: 1000px) {
   .workouts-top-grid {
@@ -1294,6 +1586,23 @@ body.light-mode .recipe-ingredients-list {
   }
 }
 
+@media (max-width: 768px) {
+  .rank-status-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .rank-main h2 {
+    font-size: 1.6rem;
+  }
+
+  .rank-progress {
+    width: 100%;
+  }
+}
+
 @media (max-width: 700px) {
   .nutrition-search-row {
     grid-template-columns: 1fr;
@@ -1310,5 +1619,15 @@ body.light-mode .recipe-ingredients-list {
   .summary-row {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .gamification-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .progress-wrapper {
+    width: 100%;
   }
 }

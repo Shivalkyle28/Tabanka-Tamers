@@ -1,244 +1,147 @@
-const userStatus = document.getElementById("userStatus");
-const logoutBtn = document.getElementById("logoutBtn");
+/* =========================
+   1. GAMIFICATION ENGINE
+========================= */
+const GAMIFICATION_CONFIG = {
+  LEVEL_BASE_XP: 100,
+  EXPONENT: 1.5,
+  RANKS: ['Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond']
+};
 
-const profileForm = document.getElementById("profileForm");
-const profileName = document.getElementById("profileName");
-const profileEmail = document.getElementById("profileEmail");
-const currentWeight = document.getElementById("currentWeight");
-const goalWeight = document.getElementById("goalWeight");
-const fitnessGoal = document.getElementById("fitnessGoal");
-const profileMessage = document.getElementById("profileMessage");
+export const GamificationService = {
+  calculateLevel(totalXp = 0) {
+    if (totalXp < GAMIFICATION_CONFIG.LEVEL_BASE_XP) return 1;
+    return Math.floor(Math.pow(totalXp / GAMIFICATION_CONFIG.LEVEL_BASE_XP, 1 / GAMIFICATION_CONFIG.EXPONENT)) + 1;
+  },
+  getTieredRank(totalLevel) {
+    const levelsPerRank = 3; 
+    const rankIndex = Math.min(Math.floor((totalLevel - 1) / levelsPerRank), GAMIFICATION_CONFIG.RANKS.length - 1);
+    const subLevel = ((totalLevel - 1) % levelsPerRank) + 1;
+    return `${GAMIFICATION_CONFIG.RANKS[rankIndex]} ${subLevel}`;
+  },
+  getXpThreshold(level) {
+    return Math.floor(GAMIFICATION_CONFIG.LEVEL_BASE_XP * Math.pow(level, GAMIFICATION_CONFIG.EXPONENT));
+  }
+};
 
-const notificationsToggle = document.getElementById("notificationsToggle");
-const themePreference = document.getElementById("themePreference");
-
-const avatarPreview = document.getElementById("avatarPreview");
-const uploadPhotoBtn = document.getElementById("uploadPhotoBtn");
-const photoInput = document.getElementById("photoInput");
-
-const installAppBtn = document.getElementById("installAppBtn");
-const changePasswordBtn = document.getElementById("changePasswordBtn");
-const exportDataBtn = document.getElementById("exportDataBtn");
-const deleteAccountBtn = document.getElementById("deleteAccountBtn");
-const accountMessage = document.getElementById("accountMessage");
-
-let deferredPrompt = null;
-
+/* =========================
+   2. DATA ACCESSORS
+========================= */
 function getCurrentUser() {
   return JSON.parse(localStorage.getItem("currentUser"));
 }
 
 function getProfileKey() {
   const user = getCurrentUser();
+  // CRITICAL: This MUST match the key used in workouts.js exactly
   return user ? `profile_${user.username}` : null;
 }
 
-function getPreferencesKey() {
-  const user = getCurrentUser();
-  return user ? `preferences_${user.username}` : null;
-}
-
-function protectPage() {
-  if (!getCurrentUser()) {
-    alert("You must be logged in.");
-    window.location.href = "auth.html";
-  }
-}
-
-function updateUserStatus() {
-  const user = getCurrentUser();
-
-  if (user) {
-    userStatus.textContent = user.username;
-    userStatus.classList.add("clickable-user");
-    userStatus.onclick = function () {
-      window.location.href = "profile.html";
-    };
-  } else {
-    userStatus.textContent = "Guest";
-    userStatus.classList.remove("clickable-user");
-    userStatus.onclick = null;
-  }
-}
-
-function applyTheme(theme) {
-  document.body.classList.remove("light-mode");
-  document.documentElement.classList.remove("light-mode");
-
-  if (theme === "light") {
-    document.body.classList.add("light-mode");
-    document.documentElement.classList.add("light-mode");
-  }
-}
-
+/* =========================
+   3. UI SYNC LOGIC
+========================= */
 function loadProfile() {
-  const saved = JSON.parse(localStorage.getItem(getProfileKey())) || {};
-  const currentUser = getCurrentUser();
-
-  profileName.value = saved.name || currentUser?.username || "";
-  profileEmail.value = saved.email || "";
-  currentWeight.value = saved.currentWeight || "";
-  goalWeight.value = saved.goalWeight || "";
-  fitnessGoal.value = saved.fitnessGoal || "";
-
-  const photo = saved.photo || "";
-  const displayName = saved.name || currentUser?.username || "U";
-
-  if (photo) {
-    avatarPreview.innerHTML = `<img src="${photo}" alt="Profile photo" class="avatar-image">`;
-  } else {
-    avatarPreview.innerHTML = `<span id="avatarInitial">${displayName.charAt(0).toUpperCase()}</span>`;
-  }
-}
-
-function saveProfile(event) {
-  event.preventDefault();
-
-  const existing = JSON.parse(localStorage.getItem(getProfileKey())) || {};
-
-  const data = {
-    ...existing,
-    name: profileName.value.trim(),
-    email: profileEmail.value.trim(),
-    currentWeight: currentWeight.value,
-    goalWeight: goalWeight.value,
-    fitnessGoal: fitnessGoal.value
-  };
-
-  localStorage.setItem(getProfileKey(), JSON.stringify(data));
-  profileMessage.textContent = "Profile saved.";
-}
-
-function loadPreferences() {
-  const saved = JSON.parse(localStorage.getItem(getPreferencesKey())) || {};
-
-  notificationsToggle.checked = Boolean(saved.notifications);
-  themePreference.value = saved.theme || "dark";
-
-  applyTheme(saved.theme || "dark");
-}
-
-function savePreferences() {
-  const data = {
-    notifications: notificationsToggle.checked,
-    theme: themePreference.value
-  };
-
-  localStorage.setItem(getPreferencesKey(), JSON.stringify(data));
-  applyTheme(data.theme);
-}
-
-function handlePhotoUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = function (e) {
-    const saved = JSON.parse(localStorage.getItem(getProfileKey())) || {};
-    saved.photo = e.target.result;
-    localStorage.setItem(getProfileKey(), JSON.stringify(saved));
-    loadProfile();
-    profileMessage.textContent = "Profile photo updated.";
-  };
-
-  reader.readAsDataURL(file);
-}
-
-function exportUserData() {
-  const profile = JSON.parse(localStorage.getItem(getProfileKey())) || {};
-  const preferences = JSON.parse(localStorage.getItem(getPreferencesKey())) || {};
-  const user = getCurrentUser();
-
-  const data = {
-    user,
-    profile,
-    preferences,
-    favoriteFoods: JSON.parse(localStorage.getItem(`favoriteFoods_${user.username}`)) || [],
-    savedWorkouts: JSON.parse(localStorage.getItem(`savedWorkouts_${user.username}`)) || [],
-    dailyNutritionLog: JSON.parse(localStorage.getItem(`dailyNutritionLog_${user.username}`)) || []
-  };
-
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-
-  link.href = url;
-  link.download = `${user.username}-tabanka-data.json`;
-  link.click();
-
-  URL.revokeObjectURL(url);
-  accountMessage.textContent = "Data exported.";
-}
-
-function deleteAccountData() {
-  const user = getCurrentUser();
-  if (!user) return;
-
-  const confirmed = confirm("Delete your saved account data from this browser?");
-  if (!confirmed) return;
-
-  const keysToRemove = [
-    `profile_${user.username}`,
-    `preferences_${user.username}`,
-    `favoriteFoods_${user.username}`,
-    `savedWorkouts_${user.username}`,
-    `dailyNutritionLog_${user.username}`
-  ];
-
-  keysToRemove.forEach(key => localStorage.removeItem(key));
-  localStorage.removeItem("currentUser");
-
-  window.location.href = "../index.html";
-}
-
-window.addEventListener("beforeinstallprompt", (event) => {
-  event.preventDefault();
-  deferredPrompt = event;
-});
-
-async function installApp() {
-  if (!deferredPrompt) {
-    accountMessage.textContent = "Install is not available yet. Try Chrome and refresh the page.";
+  const key = getProfileKey();
+  if (!key) {
+    console.warn("No user logged in. Sync aborted.");
     return;
   }
 
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt = null;
-  accountMessage.textContent = "Install prompt opened.";
+  const savedData = JSON.parse(localStorage.getItem(key)) || {};
+  const currentUser = getCurrentUser();
+
+  // 1. Sync Profile Text Fields
+  const nameInput = document.getElementById("profileName");
+  const emailInput = document.getElementById("profileEmail");
+  if(nameInput) nameInput.value = savedData.name || currentUser?.username || "";
+  if(emailInput) emailInput.value = savedData.email || "";
+
+  // 2. Sync Gamification (XP)
+  const xp = savedData.totalXp || 0;
+  const totalLevel = GamificationService.calculateLevel(xp);
+  const tieredRank = GamificationService.getTieredRank(totalLevel);
+  const nextThreshold = GamificationService.getXpThreshold(totalLevel);
+  const prevThreshold = totalLevel === 1 ? 0 : GamificationService.getXpThreshold(totalLevel - 1);
+
+  // 3. Update HTML Elements
+  const rankDisplay = document.getElementById("user-rank");
+  const xpTextDisplay = document.getElementById("profile-xp-text");
+  const progressBar = document.getElementById("profile-xp-progress");
+
+  if (rankDisplay) rankDisplay.textContent = tieredRank;
+  if (xpTextDisplay) xpTextDisplay.textContent = `${xp} / ${nextThreshold} XP`;
+  if (progressBar) {
+    const percent = ((xp - prevThreshold) / (nextThreshold - prevThreshold)) * 100;
+    progressBar.style.width = `${Math.min(percent, 100)}%`;
+  }
+
+  renderAchievements(totalLevel);
 }
 
-window.addEventListener("appinstalled", () => {
-  deferredPrompt = null;
-  accountMessage.textContent = "App installed successfully.";
-});
+function renderAchievements(totalLevel) {
+  const container = document.getElementById("achievements-container");
+  if (!container) return;
 
-logoutBtn.addEventListener("click", () => {
-  localStorage.removeItem("currentUser");
-  window.location.href = "../index.html";
-});
+  const tiers = [
+    { name: "Bronze Tamer", icon: "🥉" },
+    { name: "Silver Warrior", icon: "🥈" },
+    { name: "Gold Elite", icon: "🥇" },
+    { name: "Platinum Legend", icon: "🏆" },
+    { name: "Diamond Titan", icon: "💎" }
+  ];
 
-profileForm.addEventListener("submit", saveProfile);
-notificationsToggle.addEventListener("change", savePreferences);
-themePreference.addEventListener("change", savePreferences);
+  // Calculate current and next tier based on our 3-level system
+  const currentTierIndex = Math.min(Math.floor((totalLevel - 1) / 3), tiers.length - 1);
+  const currentTier = tiers[currentTierIndex];
+  const nextTier = tiers[currentTierIndex + 1];
 
-uploadPhotoBtn.addEventListener("click", () => {
-  photoInput.click();
-});
+  let html = `
+    <div class="achievement-card earned">
+      <div class="ach-icon">${currentTier.icon}</div>
+      <div class="ach-info">
+        <h4>Current Status: ${currentTier.name}</h4>
+        <p>You are dominating the ${currentTier.name.split(' ')[0]} ranks.</p>
+      </div>
+    </div>
+  `;
 
-photoInput.addEventListener("change", handlePhotoUpload);
+  if (nextTier) {
+    html += `
+      <div class="achievement-card locked">
+        <div class="ach-icon">🔒</div>
+        <div class="ach-info">
+          <h4>Next Milestone: ${nextTier.name}</h4>
+          <p>Keep training to unlock ${nextTier.name} status.</p>
+        </div>
+      </div>
+    `;
+  }
 
-installAppBtn.addEventListener("click", installApp);
+  container.innerHTML = html;
+}
 
-changePasswordBtn.addEventListener("click", () => {
-  accountMessage.textContent = "Password changing is not connected yet.";
-});
-
-exportDataBtn.addEventListener("click", exportUserData);
-deleteAccountBtn.addEventListener("click", deleteAccountData);
-
-protectPage();
-updateUserStatus();
+/* =========================
+   4. INITIALIZATION (The Module Fix)
+========================= */
 loadProfile();
-loadPreferences();
+
+// Re-expose saveProfile for the form
+window.saveProfile = function(event) {
+  event.preventDefault();
+  const key = getProfileKey();
+  const existing = JSON.parse(localStorage.getItem(key)) || {};
+  
+  const data = {
+    ...existing,
+    name: document.getElementById("profileName").value.trim(),
+    email: document.getElementById("profileEmail").value.trim(),
+    currentWeight: document.getElementById("currentWeight").value,
+    goalWeight: document.getElementById("goalWeight").value,
+    fitnessGoal: document.getElementById("fitnessGoal").value,
+    // Keep the XP intact!
+    totalXp: existing.totalXp || 0 
+  };
+
+  localStorage.setItem(key, JSON.stringify(data));
+  document.getElementById("profileMessage").textContent = "Profile updated!";
+  loadProfile();
+};

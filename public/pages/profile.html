@@ -23,7 +23,7 @@
       <a href="nutrition.html">Nutrition</a>
       <a href="favorites.html">Favorites</a>
       <a href="progress.html">Progress</a>
-      <a href="profile.html">Profile</a>
+      <a href="profile.html" class="active">Profile</a>
     </nav>
 
     <div class="nav-actions">
@@ -37,7 +37,7 @@
       <p class="tag">Profile & Settings</p>
       <h1>Profile & Settings</h1>
       <p class="subtitle">
-        Manage your personal information, preferences, and account settings.
+        Manage your personal information, progression, and account settings.
       </p>
     </section>
 
@@ -70,13 +70,13 @@
 
             <div class="profile-two-col">
               <div class="profile-input-group">
-                <label for="currentWeight">Current Weight</label>
-                <input type="number" id="currentWeight" class="search-input" placeholder="Current weight" min="0" />
+                <label for="currentWeight">Current Weight (kg)</label>
+                <input type="number" id="currentWeight" class="search-input" placeholder="Weight" min="0" />
               </div>
 
               <div class="profile-input-group">
-                <label for="goalWeight">Goal Weight</label>
-                <input type="number" id="goalWeight" class="search-input" placeholder="Goal weight" min="0" />
+                <label for="goalWeight">Goal Weight (kg)</label>
+                <input type="number" id="goalWeight" class="search-input" placeholder="Goal" min="0" />
               </div>
             </div>
 
@@ -96,6 +96,33 @@
             <p id="profileMessage" class="form-message"></p>
           </form>
         </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="profile-section-card">
+        <div class="section-header">
+          <h2>Fitness Journey</h2>
+          <p>Track your rank, XP, and earned badges.</p>
+        </div>
+
+        <div class="rank-status-banner">
+          <div class="rank-main">
+            <span class="stat-label">Current Rank</span>
+            <h2 id="user-rank">Bronze 1</h2>
+          </div>
+          <div class="rank-progress">
+            <div class="progress-info">
+              <span id="profile-xp-text">0 / 100 XP</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="profile-xp-progress" class="progress-bar-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="achievements-container" class="achievements-grid">
+          </div>
       </div>
     </section>
 
@@ -156,6 +183,6 @@
   </footer>
 
   <script src="../auth.js"></script>
-  <script src="../profile.js"></script>
+  <script type="module" src="../profile.js"></script>
 </body>
 </html>
