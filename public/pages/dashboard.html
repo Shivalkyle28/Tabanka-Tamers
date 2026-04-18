@@ -13,12 +13,12 @@
 <body>
   <header class="navbar">
     <div class="logo">
-    <img src="../assets/images/logo.png" alt="Tabanka Tamers logo" class="logo-img">
-    <span>Tabanka Tamers</span>
+      <img src="../assets/images/logo.png" alt="Tabanka Tamers logo" class="logo-img">
+      <span>Tabanka Tamers</span>
     </div>
 
     <nav>
-      <a href="dashboard.html">Dashboard</a>
+      <a href="dashboard.html" class="active">Dashboard</a>
       <a href="workouts.html">Workouts</a>
       <a href="nutrition.html">Nutrition</a>
       <a href="favorites.html">Favorites</a>
@@ -37,29 +37,26 @@
       <p class="tag">Track your journey</p>
       <h1>Dashboard</h1>
       <p class="subtitle">
-        View your saved foods, workout totals, daily nutrition log, and recent workout history.
+        Review your progress, nutrition logs, and your previous gym limes.
       </p>
     </section>
 
     <section class="section">
       <div class="stats-grid">
         <div class="stat-card">
-          <p>Total Favorite Foods</p>
+          <p>Favorite Foods</p>
           <h2 id="totalFoods">0</h2>
         </div>
-
         <div class="stat-card">
-          <p>Total Saved Workouts</p>
+          <p>Total Limes (Workouts)</p>
           <h2 id="totalSavedWorkouts">0</h2>
         </div>
-
         <div class="stat-card">
-          <p>Total Calories Saved</p>
-          <h2 id="totalCalories">0</h2>
+          <p>Total XP Earned</p>
+          <h2 id="totalXP">0</h2>
         </div>
-
         <div class="stat-card">
-          <p>Total Protein Saved</p>
+          <p>Protein Saved</p>
           <h2 id="totalProtein">0 g</h2>
         </div>
       </div>
@@ -67,8 +64,8 @@
 
     <section class="section">
       <div class="section-header">
-        <h2>Nutrition Summary</h2>
-        <p>Combined values from your favorite Caribbean foods.</p>
+        <h2>The Lime Summary</h2>
+        <p>Combined nutrition vibes from your favorite Caribbean picks.</p>
       </div>
 
       <div class="summary-card">
@@ -93,8 +90,8 @@
 
     <section class="section">
       <div class="section-header">
-        <h2>Today's Nutrition Log</h2>
-        <p>Foods you logged for today.</p>
+        <h2>Today's Vibes</h2>
+        <p>Nutrition logged for today.</p>
       </div>
 
       <div id="todayLogSummary" class="summary-card">
@@ -121,8 +118,8 @@
 
     <section class="section">
       <div class="section-header">
-        <h2>Saved Workouts</h2>
-        <p>Your workout history appears here.</p>
+        <h2>Past Limes</h2>
+        <p>Click a session to see exactly what you did.</p>
       </div>
 
       <div id="savedWorkoutsContainer" class="saved-workouts-list"></div>
