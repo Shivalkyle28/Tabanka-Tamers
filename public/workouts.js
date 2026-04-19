@@ -2,39 +2,29 @@
    1. GAMIFICATION ENGINE
 ========================= */
 const GAMIFICATION_CONFIG = {
-  POINTS_PER_SET: 5,
+  POINTS_PER_SET: 5,      
   LEVEL_BASE_XP: 100,
   EXPONENT: 1.5,
-  RANKS: ["Bronze", "Silver", "Gold", "Platinum", "Diamond"]
+  RANKS: ['Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond']
 };
 
 const GamificationService = {
   calculateLevel(totalXp = 0) {
     if (totalXp < GAMIFICATION_CONFIG.LEVEL_BASE_XP) return 1;
-    return Math.floor(
-      Math.pow(
-        totalXp / GAMIFICATION_CONFIG.LEVEL_BASE_XP,
-        1 / GAMIFICATION_CONFIG.EXPONENT
-      )
-    ) + 1;
+    return Math.floor(Math.pow(totalXp / GAMIFICATION_CONFIG.LEVEL_BASE_XP, 1 / GAMIFICATION_CONFIG.EXPONENT)) + 1;
   },
 
+  // Calculates tiered rank: changes name every 3 levels
   getTieredRank(totalLevel) {
-    const levelsPerRank = 3;
-    const rankIndex = Math.min(
-      Math.floor((totalLevel - 1) / levelsPerRank),
-      GAMIFICATION_CONFIG.RANKS.length - 1
-    );
+    const levelsPerRank = 3; 
+    const rankIndex = Math.min(Math.floor((totalLevel - 1) / levelsPerRank), GAMIFICATION_CONFIG.RANKS.length - 1);
     const subLevel = ((totalLevel - 1) % levelsPerRank) + 1;
-
-    return `${GAMIFICATION_CONFIG.RANKS[rankIndex]} ${subLevel}`;
+    
+    return ${GAMIFICATION_CONFIG.RANKS[rankIndex]} ${subLevel};
   },
 
   getXpThreshold(level) {
-    return Math.floor(
-      GAMIFICATION_CONFIG.LEVEL_BASE_XP *
-        Math.pow(level, GAMIFICATION_CONFIG.EXPONENT)
-    );
+    return Math.floor(GAMIFICATION_CONFIG.LEVEL_BASE_XP * Math.pow(level, GAMIFICATION_CONFIG.EXPONENT));
   }
 };
 
@@ -49,6 +39,7 @@ const selectedMusclesText = document.getElementById("selectedMusclesText");
 const userStatus = document.getElementById("userStatus");
 const logoutBtn = document.getElementById("logoutBtn");
 const exerciseSearchInput = document.getElementById("exerciseSearchInput");
+// exerciseLevelFilter removed
 const exerciseMuscleFilter = document.getElementById("exerciseMuscleFilter");
 const workoutTimerDisplay = document.getElementById("workoutTimerDisplay");
 const restTimerDisplay = document.getElementById("restTimerDisplay");
@@ -70,10 +61,8 @@ const rewardToast = document.getElementById("reward-toast");
 /* =========================
    3. STATE & CONFIG
 ========================= */
-const EXERCISE_JSON_URL =
-  "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/dist/exercises.json";
-const EXERCISE_IMAGE_BASE_URL =
-  "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/";
+const EXERCISE_JSON_URL = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/dist/exercises.json";
+const EXERCISE_IMAGE_BASE_URL = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/";
 
 let allExercises = [];
 let currentWorkout = [];
@@ -92,72 +81,46 @@ function getCurrentUser() {
 
 function getUserStorageKey(baseKey) {
   const user = getCurrentUser();
-  return user ? `${baseKey}_${user.username}` : null;
+  return user ? ${baseKey}_${user.username} : null;
 }
 
 function updateGamificationUI() {
   const user = getCurrentUser();
   if (!user) return;
-
-  const profileKey = `profile_${user.username}`;
+  const profileKey = profile_${user.username};
   const profileData = JSON.parse(localStorage.getItem(profileKey)) || {};
   const currentXp = profileData.totalXp || 0;
 
   const totalLevel = GamificationService.calculateLevel(currentXp);
-  const tieredRank = GamificationService.getTieredRank(totalLevel);
-
+  const tieredRank = GamificationService.getTieredRank(totalLevel); 
+  
   const nextThreshold = GamificationService.getXpThreshold(totalLevel);
-  const prevThreshold =
-    totalLevel === 1 ? 0 : GamificationService.getXpThreshold(totalLevel - 1);
-
-  let progressPercent = 0;
-  if (nextThreshold > prevThreshold) {
-    progressPercent =
-      ((currentXp - prevThreshold) / (nextThreshold - prevThreshold)) * 100;
-  }
+  const prevThreshold = totalLevel === 1 ? 0 : GamificationService.getXpThreshold(totalLevel - 1);
+  const progressPercent = ((currentXp - prevThreshold) / (nextThreshold - prevThreshold)) * 100;
 
   if (userRankEl) userRankEl.textContent = tieredRank;
-  if (userLevelEl && userLevelEl.parentElement) {
-    userLevelEl.parentElement.style.display = "none";
-  }
-  if (xpTextEl) xpTextEl.textContent = `${currentXp} / ${nextThreshold} XP`;
-  if (xpProgressBar) {
-    xpProgressBar.style.width = `${Math.min(Math.max(progressPercent, 0), 100)}%`;
-  }
+  if (userLevelEl && userLevelEl.parentElement) userLevelEl.parentElement.style.display = 'none'; 
+  if (xpTextEl) xpTextEl.textContent = ${currentXp} / ${nextThreshold} XP;
+  if (xpProgressBar) xpProgressBar.style.width = ${Math.min(progressPercent, 100)}%;
 }
 
 function triggerRewardToast(level) {
   if (!rewardToast) return;
-
   const rankDisplay = GamificationService.getTieredRank(level);
-  const rewardMessage = document.getElementById("reward-message");
-
-  if (rewardMessage) {
-    rewardMessage.textContent = `Promoted to ${rankDisplay}!`;
-  }
-
+  document.getElementById("reward-message").textContent = Promoted to ${rankDisplay}!;
   rewardToast.classList.add("show");
   setTimeout(() => rewardToast.classList.remove("show"), 4000);
 }
 
 function updateUserStatus() {
   const user = getCurrentUser();
-
   if (user) {
-    if (userStatus) {
-      userStatus.textContent = user.username;
-      userStatus.classList.add("clickable-user");
-      userStatus.onclick = () => {
-        window.location.href = "profile.html";
-      };
-    }
+    userStatus.textContent = user.username;
+    userStatus.classList.add("clickable-user");
+    userStatus.onclick = () => { window.location.href = "profile.html"; };
     updateGamificationUI();
   } else {
-    if (userStatus) {
-      userStatus.textContent = "Guest";
-      userStatus.classList.remove("clickable-user");
-      userStatus.onclick = null;
-    }
+    userStatus.textContent = "Guest";
   }
 }
 
@@ -165,11 +128,10 @@ function updateUserStatus() {
    5. VISUALS (BODY HIGHLIGHTS)
 ========================= */
 function clearBodyHighlights() {
-  [frontBodySvg, backBodySvg].forEach((svgObject) => {
+  [frontBodySvg, backBodySvg].forEach(svgObject => {
     if (!svgObject || !svgObject.contentDocument) return;
-
     const activeParts = svgObject.contentDocument.querySelectorAll(".muscle");
-    activeParts.forEach((part) => {
+    activeParts.forEach(part => {
       part.classList.remove("active");
       part.classList.add("inactive");
     });
@@ -178,7 +140,6 @@ function clearBodyHighlights() {
 
 function highlightMuscleParts(muscles) {
   clearBodyHighlights();
-
   const muscleMap = {
     chest: ["chest"],
     shoulders: ["shoulders", "shoulders2", "rearshoulders", "rearshoulders2"],
@@ -198,21 +159,13 @@ function highlightMuscleParts(muscles) {
     lowerback: ["lowerback"],
     lower_back: ["lowerback"]
   };
-
   const svgDocs = [frontBodySvg?.contentDocument, backBodySvg?.contentDocument];
-
-  muscles.forEach((muscle) => {
-    const normalized = muscle
-      .toLowerCase()
-      .replace(/\s+/g, "")
-      .replace(/-/g, "");
-
+  muscles.forEach(muscle => {
+    const normalized = muscle.toLowerCase().replace(/\s+/g, "").replace(/-/g, "");
     const ids = muscleMap[normalized] || [];
-
-    svgDocs.forEach((doc) => {
+    svgDocs.forEach(doc => {
       if (!doc) return;
-
-      ids.forEach((id) => {
+      ids.forEach(id => {
         const el = doc.getElementById(id);
         if (el) {
           el.classList.remove("inactive");
@@ -229,18 +182,15 @@ function highlightMuscleParts(muscles) {
 function formatTime(totalSeconds) {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
-  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  return ${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")};
 }
 
 function updateWorkoutTimerDisplay() {
-  if (workoutTimerDisplay) {
-    workoutTimerDisplay.textContent = formatTime(workoutSeconds);
-  }
+  workoutTimerDisplay.textContent = formatTime(workoutSeconds);
 }
 
 function startWorkoutTimer() {
   if (workoutTimerInterval) return;
-
   workoutTimerInterval = setInterval(() => {
     workoutSeconds += 1;
     updateWorkoutTimerDisplay();
@@ -259,14 +209,11 @@ function resetWorkoutTimer() {
 }
 
 function updateRestTimerDisplay() {
-  if (restTimerDisplay) {
-    restTimerDisplay.textContent = formatTime(restTimeRemaining);
-  }
+  restTimerDisplay.textContent = formatTime(restTimeRemaining);
 }
 
 function startRestTimer() {
   if (restTimerInterval) return;
-
   restTimerInterval = setInterval(() => {
     if (restTimeRemaining > 0) {
       restTimeRemaining -= 1;
@@ -301,76 +248,42 @@ function setRestPreset(seconds) {
 ========================= */
 function getExerciseImageUrl(exercise) {
   if (!exercise.images || exercise.images.length === 0) return "";
-  return `${EXERCISE_IMAGE_BASE_URL}${exercise.images[0]}`;
+  return ${EXERCISE_IMAGE_BASE_URL}${exercise.images[0]};
 }
 
 async function loadExercises() {
   try {
     const response = await fetch(EXERCISE_JSON_URL);
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch exercises");
-    }
-
     const exercises = await response.json();
-    allExercises = exercises
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .slice(0, 80);
-
+    allExercises = exercises.sort((a, b) => a.name.localeCompare(b.name)).slice(0, 80);
     populateMuscleFilter(allExercises);
     displayExercises(allExercises);
   } catch (error) {
-    if (workoutExercisesContainer) {
-      workoutExercisesContainer.innerHTML =
-        `<p class="empty-state">Could not load exercises.</p>`;
-    }
-    console.error("Error loading exercises:", error);
+    workoutExercisesContainer.innerHTML = <p class="empty-state">Could not load exercises.</p>;
   }
 }
 
 function populateMuscleFilter(exercises) {
   if (!exerciseMuscleFilter) return;
-
   const muscles = new Set();
-  exercises.forEach((ex) => {
-    (ex.primaryMuscles || []).forEach((m) => muscles.add(m));
-  });
-
-  exerciseMuscleFilter.innerHTML =
-    `<option value="all">All Muscle Groups</option>` +
-    [...muscles]
-      .sort()
-      .map((m) => `<option value="${m.toLowerCase()}">${m}</option>`)
-      .join("");
+  exercises.forEach(ex => (ex.primaryMuscles || []).forEach(m => muscles.add(m)));
+  exerciseMuscleFilter.innerHTML = <option value="all">All Muscle Groups</option> + 
+    [...muscles].sort().map(m => <option value="${m.toLowerCase()}">${m}</option>).join("");
 }
 
 function displayExercises(exercises) {
-  if (!workoutExercisesContainer) return;
-
   workoutExercisesContainer.innerHTML = "";
-
   if (exercises.length === 0) {
-    workoutExercisesContainer.innerHTML =
-      `<p class="empty-state">No exercises found.</p>`;
+    workoutExercisesContainer.innerHTML = <p class="empty-state">No exercises found.</p>;
     return;
   }
-
-  exercises.forEach((exercise) => {
+  exercises.forEach(exercise => {
     const imageUrl = getExerciseImageUrl(exercise);
-    const primaryMuscles =
-      exercise.primaryMuscles?.length
-        ? exercise.primaryMuscles.join(", ")
-        : "N/A";
-
+    const primaryMuscles = exercise.primaryMuscles?.length ? exercise.primaryMuscles.join(", ") : "N/A";
     const safeName = exercise.name.replace(/'/g, "\\'");
-
     workoutExercisesContainer.innerHTML += `
       <div class="card">
-        ${
-          imageUrl
-            ? `<img src="${imageUrl}" alt="${exercise.name}" class="exercise-image" onerror="this.style.display='none';" />`
-            : ""
-        }
+        ${imageUrl ? <img src="${imageUrl}" alt="${exercise.name}" class="exercise-image" onerror="this.style.display='none';" /> : ""}
         <h3>${exercise.name}</h3>
         <p><strong>Category:</strong> ${exercise.category || "N/A"}</p>
         <p><strong>Primary Muscles:</strong> ${primaryMuscles}</p>
@@ -382,25 +295,13 @@ function displayExercises(exercises) {
 }
 
 function filterExercises() {
-  const searchValue = exerciseSearchInput
-    ? exerciseSearchInput.value.trim().toLowerCase()
-    : "";
-
-  const selectedMuscle = exerciseMuscleFilter
-    ? exerciseMuscleFilter.value
-    : "all";
-
-  const filtered = allExercises.filter((ex) => {
+  const searchValue = exerciseSearchInput.value.trim().toLowerCase();
+  const selectedMuscle = exerciseMuscleFilter.value;
+  const filtered = allExercises.filter(ex => {
     const matchesName = ex.name.toLowerCase().includes(searchValue);
-    const matchesMuscle =
-      selectedMuscle === "all" ||
-      (ex.primaryMuscles || []).some(
-        (m) => m.toLowerCase() === selectedMuscle
-      );
-
+    const matchesMuscle = selectedMuscle === "all" || (ex.primaryMuscles || []).some(m => m.toLowerCase() === selectedMuscle);
     return matchesName && matchesMuscle;
   });
-
   displayExercises(filtered);
 }
 
@@ -408,9 +309,8 @@ function filterExercises() {
    8. WORKOUT BUILDER
 ========================= */
 function addExerciseToWorkout(exerciseName) {
-  const ex = allExercises.find((e) => e.name === exerciseName);
+  const ex = allExercises.find(e => e.name === exerciseName);
   if (!ex) return;
-
   currentWorkout.push({
     id: Date.now() + Math.random(),
     name: ex.name,
@@ -421,23 +321,17 @@ function addExerciseToWorkout(exerciseName) {
     reps: 10,
     weight: 0
   });
-
   updateSelectedMuscles(ex.primaryMuscles || []);
   renderCurrentWorkout();
 }
 
 function renderCurrentWorkout() {
-  if (!currentWorkoutContainer) return;
-
   currentWorkoutContainer.innerHTML = "";
-
   if (currentWorkout.length === 0) {
-    currentWorkoutContainer.innerHTML =
-      `<p class="empty-state">No exercises added yet.</p>`;
+    currentWorkoutContainer.innerHTML = <p class="empty-state">No exercises added yet.</p>;
     return;
   }
-
-  currentWorkout.forEach((item) => {
+  currentWorkout.forEach(item => {
     currentWorkoutContainer.innerHTML += `
       <div class="workout-item-card">
         <div class="workout-item-top">
@@ -448,18 +342,9 @@ function renderCurrentWorkout() {
           <button class="btn-secondary small-btn" onclick="removeWorkoutItem(${item.id})">Remove</button>
         </div>
         <div class="workout-input-grid">
-          <div>
-            <label>Sets</label>
-            <input type="number" min="1" value="${item.sets}" onchange="updateWorkoutItem(${item.id}, 'sets', this.value)" />
-          </div>
-          <div>
-            <label>Reps</label>
-            <input type="number" min="1" value="${item.reps}" onchange="updateWorkoutItem(${item.id}, 'reps', this.value)" />
-          </div>
-          <div>
-            <label>Weight (lbs)</label>
-            <input type="number" min="0" value="${item.weight}" onchange="updateWorkoutItem(${item.id}, 'weight', this.value)" />
-          </div>
+          <div><label>Sets</label><input type="number" min="1" value="${item.sets}" onchange="updateWorkoutItem(${item.id}, 'sets', this.value)" /></div>
+          <div><label>Reps</label><input type="number" min="1" value="${item.reps}" onchange="updateWorkoutItem(${item.id}, 'reps', this.value)" /></div>
+          <div><label>Weight (lbs)</label><input type="number" min="0" value="${item.weight}" onchange="updateWorkoutItem(${item.id}, 'weight', this.value)" /></div>
         </div>
       </div>
     `;
@@ -467,21 +352,15 @@ function renderCurrentWorkout() {
 }
 
 function updateWorkoutItem(itemId, field, value) {
-  const item = currentWorkout.find((i) => i.id === itemId);
-  if (item) {
-    item[field] = Number(value);
-  }
+  const item = currentWorkout.find(i => i.id === itemId);
+  if (item) item[field] = Number(value);
 }
 
 function removeWorkoutItem(itemId) {
-  currentWorkout = currentWorkout.filter((i) => i.id !== itemId);
+  currentWorkout = currentWorkout.filter(i => i.id !== itemId);
   renderCurrentWorkout();
-
   if (currentWorkout.length === 0) {
-    if (selectedMusclesText) {
-      selectedMusclesText.textContent =
-        "Select an exercise to highlight muscle groups.";
-    }
+    selectedMusclesText.textContent = "Select an exercise to view its main muscle groups.";
     clearBodyHighlights();
   }
 }
@@ -489,25 +368,17 @@ function removeWorkoutItem(itemId) {
 function clearWorkout() {
   currentWorkout = [];
   renderCurrentWorkout();
-
-  if (selectedMusclesText) {
-    selectedMusclesText.textContent =
-      "Select an exercise to highlight muscle groups.";
-  }
-
+  selectedMusclesText.textContent = "Select an exercise to view its main muscle groups.";
   clearBodyHighlights();
 }
 
 function updateSelectedMuscles(muscles) {
-  if (!selectedMusclesText) return;
-
   if (!muscles || muscles.length === 0) {
     selectedMusclesText.textContent = "No muscle data available.";
     clearBodyHighlights();
     return;
   }
-
-  selectedMusclesText.textContent = `Primary muscles: ${muscles.join(", ")}`;
+  selectedMusclesText.textContent = Primary muscles: ${muscles.join(", ")};
   highlightMuscleParts(muscles);
 }
 
@@ -516,34 +387,24 @@ function updateSelectedMuscles(muscles) {
 ========================= */
 function saveWorkout() {
   const user = getCurrentUser();
+  if (!user) { alert("Please log in first to save workouts."); return; }
+  if (currentWorkout.length === 0) { alert("Add at least one exercise before saving."); return; }
 
-  if (!user) {
-    alert("Please log in first to save workouts.");
-    return;
-  }
-
-  if (currentWorkout.length === 0) {
-    alert("Add at least one exercise before saving.");
-    return;
-  }
-
-  const profileKey = `profile_${user.username}`;
+  const profileKey = profile_${user.username};
   const profileData = JSON.parse(localStorage.getItem(profileKey)) || {};
+  
   const oldXp = profileData.totalXp || 0;
 
-  const totalSets = currentWorkout.reduce(
-    (sum, item) => sum + (item.sets || 0),
-    0
-  );
+  // XP based on TOTAL SETS
+  const totalSets = currentWorkout.reduce((sum, item) => sum + (item.sets || 0), 0);
   const xpGained = totalSets * GAMIFICATION_CONFIG.POINTS_PER_SET;
-
+  
   const newXp = oldXp + xpGained;
   const oldLevel = GamificationService.calculateLevel(oldXp);
   const newLevel = GamificationService.calculateLevel(newXp);
 
   const storageKey = getUserStorageKey("savedWorkouts");
   const savedWorkouts = JSON.parse(localStorage.getItem(storageKey)) || [];
-
   savedWorkouts.push({
     id: Date.now(),
     date: new Date().toLocaleString(),
@@ -552,15 +413,12 @@ function saveWorkout() {
   });
 
   profileData.totalXp = newXp;
-
   localStorage.setItem(profileKey, JSON.stringify(profileData));
   localStorage.setItem(storageKey, JSON.stringify(savedWorkouts));
 
-  alert(`Workout saved! Total Sets: ${totalSets}. +${xpGained} XP earned.`);
-
-  if (newLevel > oldLevel) {
-    triggerRewardToast(newLevel);
-  }
+  alert(Workout saved! Total Sets: ${totalSets}. +${xpGained} XP earned.);
+  
+  if (newLevel > oldLevel) triggerRewardToast(newLevel);
 
   clearWorkout();
   resetWorkoutTimer();
@@ -569,83 +427,33 @@ function saveWorkout() {
 
 function addFavoriteExercise(exerciseName) {
   const user = getCurrentUser();
-
-  if (!user) {
-    alert("Please log in to save favorites.");
-    return;
-  }
-
-  const ex = allExercises.find((e) => e.name === exerciseName);
+  if (!user) { alert("Please log in to save favorites."); return; }
+  const ex = allExercises.find(e => e.name === exerciseName);
   if (!ex) return;
-
   const key = getUserStorageKey("favoriteExercises");
   let favs = JSON.parse(localStorage.getItem(key)) || [];
-
-  if (favs.some((f) => f.name === exerciseName)) {
-    alert("Already in favorites.");
-    return;
-  }
-
+  if (favs.some(f => f.name === exerciseName)) { alert("Already in favorites."); return; }
   favs.push(ex);
   localStorage.setItem(key, JSON.stringify(favs));
-  alert(`${ex.name} added to favorites.`);
+  alert(${ex.name} added to favorites.);
 }
 
 /* =========================
    10. EVENT LISTENERS
 ========================= */
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("currentUser");
-    window.location.href = "../index.html";
-  });
-}
-
-if (exerciseSearchInput) {
-  exerciseSearchInput.addEventListener("input", filterExercises);
-}
-
-if (exerciseMuscleFilter) {
-  exerciseMuscleFilter.addEventListener("change", filterExercises);
-}
-
-if (startWorkoutTimerBtn) {
-  startWorkoutTimerBtn.addEventListener("click", startWorkoutTimer);
-}
-
-if (pauseWorkoutTimerBtn) {
-  pauseWorkoutTimerBtn.addEventListener("click", pauseWorkoutTimer);
-}
-
-if (resetWorkoutTimerBtn) {
-  resetWorkoutTimerBtn.addEventListener("click", resetWorkoutTimer);
-}
-
-if (startRestTimerBtn) {
-  startRestTimerBtn.addEventListener("click", startRestTimer);
-}
-
-if (pauseRestTimerBtn) {
-  pauseRestTimerBtn.addEventListener("click", pauseRestTimer);
-}
-
-if (resetRestTimerBtn) {
-  resetRestTimerBtn.addEventListener("click", resetRestTimer);
-}
-
-document.querySelectorAll(".restPresetBtn").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    setRestPreset(Number(btn.dataset.seconds));
-  });
-});
-
-if (saveWorkoutBtn) {
-  saveWorkoutBtn.addEventListener("click", saveWorkout);
-}
-
-if (clearWorkoutBtn) {
-  clearWorkoutBtn.addEventListener("click", clearWorkout);
-}
+if (logoutBtn) logoutBtn.addEventListener("click", () => { localStorage.removeItem("currentUser"); window.location.href = "../index.html"; });
+if (exerciseSearchInput) exerciseSearchInput.addEventListener("input", filterExercises);
+// exerciseLevelFilter listener removed
+if (exerciseMuscleFilter) exerciseMuscleFilter.addEventListener("change", filterExercises);
+if (startWorkoutTimerBtn) startWorkoutTimerBtn.addEventListener("click", startWorkoutTimer);
+if (pauseWorkoutTimerBtn) pauseWorkoutTimerBtn.addEventListener("click", pauseWorkoutTimer);
+if (resetWorkoutTimerBtn) resetWorkoutTimerBtn.addEventListener("click", resetWorkoutTimer);
+if (startRestTimerBtn) startRestTimerBtn.addEventListener("click", startRestTimer);
+if (pauseRestTimerBtn) pauseRestTimerBtn.addEventListener("click", pauseRestTimer);
+if (resetRestTimerBtn) resetRestTimerBtn.addEventListener("click", resetRestTimer);
+document.querySelectorAll(".restPresetBtn").forEach(btn => btn.addEventListener("click", () => setRestPreset(Number(btn.dataset.seconds))));
+if (saveWorkoutBtn) saveWorkoutBtn.addEventListener("click", saveWorkout);
+if (clearWorkoutBtn) clearWorkoutBtn.addEventListener("click", clearWorkout);
 
 window.addExerciseToWorkout = addExerciseToWorkout;
 window.addFavoriteExercise = addFavoriteExercise;
