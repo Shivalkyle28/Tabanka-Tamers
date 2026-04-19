@@ -11,12 +11,14 @@ const GAMIFICATION_CONFIG = {
 const GamificationService = {
   calculateLevel(totalXp = 0) {
     if (totalXp < GAMIFICATION_CONFIG.LEVEL_BASE_XP) return 1;
-    return Math.floor(
-      Math.pow(
-        totalXp / GAMIFICATION_CONFIG.LEVEL_BASE_XP,
-        1 / GAMIFICATION_CONFIG.EXPONENT
-      )
-    ) + 1;
+    return (
+      Math.floor(
+        Math.pow(
+          totalXp / GAMIFICATION_CONFIG.LEVEL_BASE_XP,
+          1 / GAMIFICATION_CONFIG.EXPONENT
+        )
+      ) + 1
+    );
   },
 
   getTieredRank(totalLevel) {
@@ -27,7 +29,7 @@ const GamificationService = {
     );
     const subLevel = ((totalLevel - 1) % levelsPerRank) + 1;
 
-    return ${GAMIFICATION_CONFIG.RANKS[rankIndex]} ${subLevel};
+    return `${GAMIFICATION_CONFIG.RANKS[rankIndex]} ${subLevel}`;
   },
 
   getXpThreshold(level) {
@@ -92,14 +94,14 @@ function getCurrentUser() {
 
 function getUserStorageKey(baseKey) {
   const user = getCurrentUser();
-  return user ? ${baseKey}_${user.username} : null;
+  return user ? `${baseKey}_${user.username}` : null;
 }
 
 function updateGamificationUI() {
   const user = getCurrentUser();
   if (!user) return;
 
-  const profileKey = profile_${user.username};
+  const profileKey = `profile_${user.username}`;
   const profileData = JSON.parse(localStorage.getItem(profileKey)) || {};
   const currentXp = profileData.totalXp || 0;
 
@@ -117,12 +119,20 @@ function updateGamificationUI() {
   }
 
   if (userRankEl) userRankEl.textContent = tieredRank;
+
   if (userLevelEl && userLevelEl.parentElement) {
     userLevelEl.parentElement.style.display = "none";
   }
-  if (xpTextEl) xpTextEl.textContent = ${currentXp} / ${nextThreshold} XP;
+
+  if (xpTextEl) {
+    xpTextEl.textContent = `${currentXp} / ${nextThreshold} XP`;
+  }
+
   if (xpProgressBar) {
-    xpProgressBar.style.width = ${Math.min(Math.max(progressPercent, 0), 100)}%;
+    xpProgressBar.style.width = `${Math.min(
+      Math.max(progressPercent, 0),
+      100
+    )}%`;
   }
 }
 
@@ -133,7 +143,7 @@ function triggerRewardToast(level) {
   const rewardMessage = document.getElementById("reward-message");
 
   if (rewardMessage) {
-    rewardMessage.textContent = Promoted to ${rankDisplay}!;
+    rewardMessage.textContent = `Promoted to ${rankDisplay}!`;
   }
 
   rewardToast.classList.add("show");
@@ -229,7 +239,7 @@ function highlightMuscleParts(muscles) {
 function formatTime(totalSeconds) {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
-  return ${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")};
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
 function updateWorkoutTimerDisplay() {
@@ -301,7 +311,7 @@ function setRestPreset(seconds) {
 ========================= */
 function getExerciseImageUrl(exercise) {
   if (!exercise.images || exercise.images.length === 0) return "";
-  return ${EXERCISE_IMAGE_BASE_URL}${exercise.images[0]};
+  return `${EXERCISE_IMAGE_BASE_URL}${exercise.images[0]}`;
 }
 
 async function loadExercises() {
@@ -322,7 +332,7 @@ async function loadExercises() {
   } catch (error) {
     if (workoutExercisesContainer) {
       workoutExercisesContainer.innerHTML =
-        <p class="empty-state">Could not load exercises.</p>;
+        `<p class="empty-state">Could not load exercises.</p>`;
     }
     console.error("Error loading exercises:", error);
   }
@@ -337,10 +347,10 @@ function populateMuscleFilter(exercises) {
   });
 
   exerciseMuscleFilter.innerHTML =
-    <option value="all">All Muscle Groups</option> +
+    `<option value="all">All Muscle Groups</option>` +
     [...muscles]
       .sort()
-      .map((m) => <option value="${m.toLowerCase()}">${m}</option>)
+      .map((m) => `<option value="${m.toLowerCase()}">${m}</option>`)
       .join("");
 }
 
@@ -351,7 +361,7 @@ function displayExercises(exercises) {
 
   if (exercises.length === 0) {
     workoutExercisesContainer.innerHTML =
-      <p class="empty-state">No exercises found.</p>;
+      `<p class="empty-state">No exercises found.</p>`;
     return;
   }
 
@@ -368,7 +378,7 @@ function displayExercises(exercises) {
       <div class="card">
         ${
           imageUrl
-            ? <img src="${imageUrl}" alt="${exercise.name}" class="exercise-image" onerror="this.style.display='none';" />
+            ? `<img src="${imageUrl}" alt="${exercise.name}" class="exercise-image" onerror="this.style.display='none';" />`
             : ""
         }
         <h3>${exercise.name}</h3>
@@ -433,7 +443,7 @@ function renderCurrentWorkout() {
 
   if (currentWorkout.length === 0) {
     currentWorkoutContainer.innerHTML =
-      <p class="empty-state">No exercises added yet.</p>;
+      `<p class="empty-state">No exercises added yet.</p>`;
     return;
   }
 
@@ -507,7 +517,7 @@ function updateSelectedMuscles(muscles) {
     return;
   }
 
-  selectedMusclesText.textContent = Primary muscles: ${muscles.join(", ")};
+  selectedMusclesText.textContent = `Primary muscles: ${muscles.join(", ")}`;
   highlightMuscleParts(muscles);
 }
 
@@ -527,7 +537,7 @@ function saveWorkout() {
     return;
   }
 
-  const profileKey = profile_${user.username};
+  const profileKey = `profile_${user.username}`;
   const profileData = JSON.parse(localStorage.getItem(profileKey)) || {};
   const oldXp = profileData.totalXp || 0;
 
@@ -556,7 +566,7 @@ function saveWorkout() {
   localStorage.setItem(profileKey, JSON.stringify(profileData));
   localStorage.setItem(storageKey, JSON.stringify(savedWorkouts));
 
-  alert(Workout saved! Total Sets: ${totalSets}. +${xpGained} XP earned.);
+  alert(`Workout saved! Total Sets: ${totalSets}. +${xpGained} XP earned.`);
 
   if (newLevel > oldLevel) {
     triggerRewardToast(newLevel);
@@ -588,7 +598,7 @@ function addFavoriteExercise(exerciseName) {
 
   favs.push(ex);
   localStorage.setItem(key, JSON.stringify(favs));
-  alert(${ex.name} added to favorites.);
+  alert(`${ex.name} added to favorites.`);
 }
 
 /* =========================
